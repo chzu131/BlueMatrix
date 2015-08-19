@@ -69,7 +69,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 byte[] customData = mCustomPreview.getCustomData(getTextData());
                 Toast.makeText(this, R.string.sending_data, Toast.LENGTH_LONG).show();
                 BlueAction blueAction= new BlueAction();
-                blueAction.SendCustomPattern(customData);
+                blueAction.SendTextPattern(customData);
                 break;
             case R.id.back :
                 //发送数据到蓝牙设备
