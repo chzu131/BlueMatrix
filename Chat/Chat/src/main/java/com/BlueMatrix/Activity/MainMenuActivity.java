@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
- 
+
 public class MainMenuActivity extends Activity implements View.OnClickListener {
     private final static String TAG = MainMenuActivity.class.getSimpleName();
 

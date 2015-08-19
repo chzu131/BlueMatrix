@@ -32,10 +32,10 @@ public class BlueAction {
             0x0,0x0,0x0,0x0,
             0x0,0x0,0x0,0x0,
             0x0,0x0,0x0,0x0,
-            0x0,0x0,0x0,0x0,
-            0x0,0x0,0x0,0x0,
-            0x0,0x0,0x0,0x0,
-            0x0,0x0,0x0,0x0
+        //    0x0,0x0,0x0,0x0,
+        //    0x0,0x0,0x0,0x0,
+        //    0x0,0x0,0x0,0x0,
+        //    0x0,0x0,0x0,0x0
     };
 
     public BlueAction()
@@ -53,10 +53,10 @@ public class BlueAction {
         {
             return;
         }
-        BluetoothGattCharacteristic characteristic = map.get(RBLService.UUID_BLE_SHIELD_TX);
+        BluetoothGattCharacteristic characteristic = map.get(RBLService.UUID_BLE_SHIELD_CUSTOMECOMMAND);
         if(characteristic != null)
         {
-            for (int i = 0,j = 0; j < data.length; i++,j++)
+            for (int i = 0,j = 0; j < data.length; i++)
             {
                 if((i+1)%4 == 0)
                 {
@@ -64,7 +64,7 @@ public class BlueAction {
                 }
                 else
                 {
-                    CustomPattern[i] = ByteConvertToHex(data[j]);
+                    CustomPattern[i] = ByteConvertToHex(data[j++]);
                 }
 
             }
@@ -81,7 +81,7 @@ public class BlueAction {
             return;
         }
         byte CustomTextPattern[] = new byte[data.length];
-        BluetoothGattCharacteristic characteristic = map.get(RBLService.UUID_BLE_SHIELD_TX);
+        BluetoothGattCharacteristic characteristic = map.get(RBLService.UUID_BLE_SHIELD_TEXTCOMMAND);
         if(characteristic != null)
         {
             for (int i = 0; i < data.length; i++)
@@ -94,13 +94,17 @@ public class BlueAction {
     }
     public void getGattService(BluetoothGattService gattService)
     {
-        BluetoothGattCharacteristic characteristic = gattService
-                .getCharacteristic(RBLService.UUID_BLE_SHIELD_TX);
+        BluetoothGattCharacteristic characteristic;
+        characteristic= gattService.getCharacteristic(RBLService.UUID_BLE_SHIELD_CUSTOMECOMMAND);
         map.put(characteristic.getUuid(), characteristic);
 
-        BluetoothGattCharacteristic characteristic2 = gattService.getCharacteristic(
+         characteristic = gattService.getCharacteristic(
                 RBLService.UUID_BLE_SHIELD_REGULARCOMMAND);
-        map.put(characteristic2.getUuid(), characteristic2);
+        map.put(characteristic.getUuid(), characteristic);
+
+        characteristic = gattService.getCharacteristic(
+                RBLService.UUID_BLE_SHIELD_TEXTCOMMAND);
+        map.put(characteristic.getUuid(), characteristic);
     }
 
     //传送规则图案

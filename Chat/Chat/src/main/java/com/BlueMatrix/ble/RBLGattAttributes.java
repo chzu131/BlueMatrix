@@ -26,18 +26,19 @@ public class RBLGattAttributes {
 	private static HashMap<String, String> attributes = new HashMap<String, String>();
 	public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 	//public static String BLE_SHIELD_TX = "713d0003-503e-4c75-ba94-3148f18d941e"
-    public static String BLE_SHIELD_TX = "0000fff1-0000-1000-8000-00805f9b34fb";
+    public static String BLE_SHIELD_CUSTOMECOMMAND = "0000fff1-0000-1000-8000-00805f9b34fb";
 	public static String BLE_SHIELD_RX = "0000fff1-0000-1000-8000-00805f9b34fb";
 	public static String BLE_SHIELD_REGULARCOMMAND = "0000fff2-0000-1000-8000-00805f9b34fb";
     public static String BLE_SHIELD_SERVICE = "0000fff0-0000-1000-8000-00805f9b34fb";
-	//public static String BLE_SHIELD_SERVICE = "713d0000-503e-4c75-ba94-3148f18d941e";
+	public static String BLE_SHIELD_TEXTCOMMAND = "0000fff3-0000-1000-8000-00805f9b34fb";
 
 	static {
 		// RBL Services.
 		attributes.put("0000fff0-0000-1000-8000-00805f9b34fb","BLE Shield Service");
          //attributes.put("0000fff1-0000-1000-8000-00805f9b34fb",
 		// RBL Characteristics.
-		attributes.put(BLE_SHIELD_TX, "BLE Shield TX");
+		attributes.put(BLE_SHIELD_CUSTOMECOMMAND, "BLE_SHIELD_CUSTOMECOMMAND");
+		attributes.put(BLE_SHIELD_TEXTCOMMAND, "BLE_SHIELD_TEXTCOMMAND");
 		attributes.put(BLE_SHIELD_RX, "BLE Shield RX");
 	}
 

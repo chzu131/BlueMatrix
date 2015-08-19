@@ -93,7 +93,7 @@ public class ChatActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				BluetoothGattCharacteristic characteristic = map.get(RBLService.UUID_BLE_SHIELD_TX);
+				BluetoothGattCharacteristic characteristic = map.get(RBLService.UUID_BLE_SHIELD_CUSTOMECOMMAND);
                 if(characteristic != null)
                 {
                     byte mydata[]={0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
@@ -184,10 +184,13 @@ public class ChatActivity extends Activity {
 			return;
 
 		BluetoothGattCharacteristic characteristic = gattService
-				.getCharacteristic(RBLService.UUID_BLE_SHIELD_TX);
+				.getCharacteristic(RBLService.UUID_BLE_SHIELD_CUSTOMECOMMAND);
 		map.put(characteristic.getUuid(), characteristic);
 
-//		BluetoothGattCharacteristic characteristicRx = gattService.getCharacteristic(RBLService.UUID_BLE_SHIELD_RX);
+		 characteristic = gattService.getCharacteristic(RBLService.UUID_BLE_SHIELD_TEXTCOMMAND);
+		map.put(characteristic.getUuid(), characteristic);
+
+//		BluetoothGattCharacteristic characteristicRx = gattService.getCharacteristic(RBLService.UUID_BLE_SHIELD_TEXTCOMMAND);
 //        if(characteristicRx != null)
 //        {
 //            mBluetoothLeService.setCharacteristicNotification(characteristicRx, true);
