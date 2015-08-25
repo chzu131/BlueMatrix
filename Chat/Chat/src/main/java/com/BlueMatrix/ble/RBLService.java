@@ -55,7 +55,7 @@ public class RBLService extends Service {
 
 	public final static UUID UUID_BLE_SHIELD_CUSTOMECOMMAND = UUID
 			.fromString(RBLGattAttributes.BLE_SHIELD_CUSTOMECOMMAND);
-	public final static UUID UUID_BLE_SHIELD_TEXTCOMMAND = UUID
+	public final static UUID UUID_BLE_SHIELD_TEXTCOMMAND= UUID
 			.fromString(RBLGattAttributes.BLE_SHIELD_TEXTCOMMAND);
 	public final static UUID UUID_BLE_SHIELD_RX = UUID
 			.fromString(RBLGattAttributes.BLE_SHIELD_RX);
