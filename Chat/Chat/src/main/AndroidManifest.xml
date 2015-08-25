@@ -29,8 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.BlueMatrix.Activity.ChatActivity" >
-        </activity>
         <activity
             android:name="com.BlueMatrix.Activity.DeviceActivity"
             android:theme="@android:style/Theme.Dialog" >
@@ -39,12 +37,6 @@
         <activity
             android:name="com.BlueMatrix.Activity.MainMenuActivity"
             android:label="@string/app_name" >
-        </activity>
-
-        <activity android:name="com.BlueMatrix.Activity.CustomActivity"
-            android:label="custom"
-            android:screenOrientation="portrait"
-            >
         </activity>
 
         <activity android:name="com.BlueMatrix.Activity.NewCustomActivity"

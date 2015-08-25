@@ -45,6 +45,11 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         int id = v.getId();
         switch (id) {
             case R.id.preview_button :
+                if(!CheckText())
+                {
+                    Toast.makeText(this, "不能超过5个字符", Toast.LENGTH_LONG).show();
+                    break;
+                }
                 //预览LED效果
                 mCustomText.setCursorVisible(false);
                 mCustomText.destroyDrawingCache();
@@ -65,6 +70,11 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 }, 20);
                 break;
             case R.id.send_button :
+                if(!CheckText())
+                {
+                    Toast.makeText(this, "不能超过5个字符", Toast.LENGTH_LONG).show();
+                    break;
+                }
                 //发送数据到蓝牙设备
                 byte[] customData = mCustomPreview.getCustomData(getTextData());
                 Toast.makeText(this, R.string.sending_data, Toast.LENGTH_LONG).show();
@@ -79,6 +89,16 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 finish();
                 break;
         }
+    }
+
+    //检查文本框文字是否合法
+    public boolean CheckText()
+    {
+        if(mCustomText.length() > 5)
+        {
+            return false;
+        }
+        return true;
     }
 
     public int getTextLengh()
