@@ -147,7 +147,12 @@ public class CustomPreview extends View {
             int[] base = {8, 4, 2, 1};
             int colDataLenght;
             colDataLenght = col / 4;
-            if ( col % 4 != 0) {
+            if ( col % 4 != 0 )
+            {
+                colDataLenght++;
+            }
+            if (colDataLenght % 2!=0 )
+            {
                 colDataLenght++;
             }
             int patternDataLenght = colDataLenght * row;
@@ -155,6 +160,7 @@ public class CustomPreview extends View {
 
             int index = 0;
             int baseData = 0;
+
             for (int j = 0; j < row; j++) {
                 for (int i = 0; i < col; i++) {
                     if (index == i / 4 + j * colDataLenght) {
