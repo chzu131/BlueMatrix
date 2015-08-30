@@ -3,7 +3,9 @@ package com.BlueMatrix.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +24,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     private Button mBackButton;
     private CustomPreview mCustomPreview;
 
+    Paint mPaint = new Paint();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,10 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         mBackButton = (Button) findViewById(R.id.back);
         mBackButton.setOnClickListener(this);
         mCustomPreview = (CustomPreview) findViewById(R.id.custom_preview);
+
+        mPaint.setColor(0xff000000);
+        mPaint.setTextSize(10);
+        mPaint.setTypeface(typeface);
     }
 
     @Override
@@ -94,7 +101,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     //检查文本框文字是否合法
     public boolean CheckText()
     {
-        if(mCustomText.length() > 5)
+        if(mCustomText.length() > 50)
         {
             return false;
         }
@@ -108,15 +115,21 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
 
     private boolean[][] getTextData() {
         Bitmap drawingCache = mCustomText.getDrawingCache();
-        int textWidth = (int) mCustomText.getPaint().measureText(mCustomText.getText().toString());
+        String cacheText = mCustomText.getText().toString();
+        int textWidth = (int) mPaint.measureText(cacheText);
         if (textWidth <= 0) {
             return null;
         }
-        Matrix matrix = new Matrix();
-        float scale = (float) 12 / mCustomText.getHeight();
-        matrix.postScale(scale, scale);
+        Paint.FontMetrics fm = mPaint.getFontMetrics();
+        int cacheH = 12;
+        int cacheW = (int) (textWidth);
 
-        Bitmap bitmap = Bitmap.createBitmap(drawingCache, 0, 0, textWidth, mCustomText.getHeight(), matrix, true);
+        Bitmap bitmap = Bitmap.createBitmap(cacheW, cacheH, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(bitmap);
+        canvas.drawColor(0xffffffff);
+        canvas.drawText(cacheText, 0, 9, mPaint);
+
         int cacheWidth = bitmap.getWidth();
         int cacheHeight = bitmap.getHeight();
         boolean[][] drawCaches = new boolean[cacheHeight][cacheWidth];
