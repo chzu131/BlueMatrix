@@ -57,7 +57,8 @@
                 android:maxLength="20"
                 android:typeface="serif"
                 android:background="#ffffffff"
-                android:textColor="#ff000000"/>
+                android:textColor="#ff000000"
+                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"

@@ -101,7 +101,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     //检查文本框文字是否合法
     public boolean CheckText()
     {
-        if(mCustomText.length() > 50)
+        if(mCustomText.length() > 5)
         {
             return false;
         }
