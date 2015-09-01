@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -49,11 +50,12 @@ public class CustomView extends View {
     private void init() {
         mCheckOn = getResources().getDrawable(R.drawable.checkbox_on);
         mCheckOff = getResources().getDrawable(R.drawable.checkbox_off);
-
         resetData();
         initBounds();
     }
 
+    int galW;
+    int galH;
     private void initBounds() {
         if (COL <= 0 || ROW <= 0) {
             return;
@@ -64,15 +66,15 @@ public class CustomView extends View {
         int trolGalW = (int) (trolW * 0.1f);
         int trolGalH = (int) (trolH * 0.1f);
 
-        int galW = (int) ((float) trolGalW / (COL - 1));
-        int galH = (int) ((float) trolGalH / (ROW - 1));
-        int cellW = (int) ((float) (trolW - trolGalW) / COL);
-        int cellH = (int) ((float) (trolH - trolGalH) / ROW);
+        galW = (int) ((float) trolGalW / (COL - 1));
+        galH = (int) ((float) trolGalH / (ROW - 1));
+        int cellW = (int) ((float) (trolW) / COL);
+        int cellH = (int) ((float) (trolH) / ROW);
 
         for (int i = 0; i < COL; i++) {
             for (int j = 0; j < ROW; j++) {
-                int left = (cellW + galW) * i + getPaddingLeft();
-                int top = (cellH + galH) * j+ getPaddingTop();
+                int left = (cellW) * i + getPaddingLeft();
+                int top = (cellH) * j+ getPaddingTop();
                 int right = left + cellW;
                 int bottom = top + cellH;
                 Rect rect = new Rect(left, top, right, bottom);
@@ -162,6 +164,13 @@ public class CustomView extends View {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                getIndex(x, y, mIndex);
+                if (mIsDraw) {
+                    mCustomPattern[mIndex[1]][mIndex[0]] = true;
+                } else {
+                    mCustomPattern[mIndex[1]][mIndex[0]] = false;
+                }
+                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 getIndex(x, y, mIndex);
@@ -173,7 +182,6 @@ public class CustomView extends View {
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-                break;
             case MotionEvent.ACTION_CANCEL:
                 break;
         }
@@ -186,11 +194,12 @@ public class CustomView extends View {
         for (int i = 0; i < COL; i++) {
             for (int j = 0; j < ROW; j++ ) {
                 boolean pattern = mCustomPattern[j][i];
+                Rect rect = mBounds[j][i];
                 if (!pattern) {
-                    mCheckOff.setBounds(mBounds[j][i]);
+                    mCheckOff.setBounds(rect.left + galW / 2, rect.top + galH / 2, rect.right - galW / 2, rect.bottom - galH / 2);
                     mCheckOff.draw(canvas);
                 } else {
-                    mCheckOn.setBounds(mBounds[j][i]);
+                    mCheckOn.setBounds(rect.left + galW / 2, rect.top + galH / 2, rect.right - galW / 2, rect.bottom - galH / 2);
                     mCheckOn.draw(canvas);
                 }
             }
