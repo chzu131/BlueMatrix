@@ -86,7 +86,7 @@ public class BlueAction {
         BluetoothGattCharacteristic characteristic = map.get(RBLService.UUID_BLE_SHIELD_TEXTCOMMAND);
         if(characteristic != null)
         {
-            CustomTextPattern[0] = (byte)(TextLengh*12);
+            CustomTextPattern[0] = (byte)(data.length/2 + data.length%2);
             for (int i = 0; i < data.length-1; i+=2)
             {
                 CustomTextPattern[i/2+1] = (byte)(data[i]<<4);
