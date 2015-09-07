@@ -32,6 +32,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
 
         mCustomText = (EditText) findViewById(R.id.custom_text);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "font/00starmap.TTF");
+
         mCustomText.setTypeface(typeface);
         mCustomText.setDrawingCacheEnabled(true);
         mPreviewButton = (Button) findViewById(R.id.preview_button);
