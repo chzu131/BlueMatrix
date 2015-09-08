@@ -24,6 +24,8 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     private Button mBackButton;
     private CustomPreview mCustomPreview;
 
+    private int iTextMaxLength = 5;
+
     Paint mPaint = new Paint();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +104,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     //检查文本框文字是否合法
     public boolean CheckText()
     {
-        if(mCustomText.length() > 5)
+        if(mCustomText.length() > iTextMaxLength)
         {
             return false;
         }

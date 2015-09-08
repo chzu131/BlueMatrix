@@ -18,7 +18,6 @@ public class BlueAction {
     public  static int PATTERN_LEFT = 0;
     public  static int PATTERN_UP = 1;
     public  static int  PATTERN_RIGHT= 2;
-    private final int PATTERN_CUSTOM = 6;
 
     public BlueAction()
     {
@@ -102,34 +101,34 @@ public class BlueAction {
         }
     }
 
-    public static byte[] hexStringToByteArray(String s)
-    {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i+1), 16));
-        }
-        return data;
-    }
-
-    //十进制转为十六进制
-    private byte  ByteConvertToHex(byte b)
-    {
-        byte ret = b;
-        if(b >= '0' && b <= '9')
-        {
-            ret = (byte)(b - '0');
-
-        }
-        if(b >= 'a' && b <= 'f')
-        {
-            ret = (byte)(b - 'f' + 15);
-        }
-        if(b >= 'A' && b <= 'F')
-        {
-            ret = (byte)(b - 'F'+ 15);
-        }
-        return ret;
-    }
+//    public static byte[] hexStringToByteArray(String s)
+//    {
+//        int len = s.length();
+//        byte[] data = new byte[len / 2];
+//        for (int i = 0; i < len; i += 2) {
+//            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+//                    + Character.digit(s.charAt(i+1), 16));
+//        }
+//        return data;
+//    }
+//
+//    //十进制转为十六进制
+//    private byte  ByteConvertToHex(byte b)
+//    {
+//        byte ret = b;
+//        if(b >= '0' && b <= '9')
+//        {
+//            ret = (byte)(b - '0');
+//
+//        }
+//        if(b >= 'a' && b <= 'f')
+//        {
+//            ret = (byte)(b - 'f' + 15);
+//        }
+//        if(b >= 'A' && b <= 'F')
+//        {
+//            ret = (byte)(b - 'F'+ 15);
+//        }
+//        return ret;
+//    }
 }

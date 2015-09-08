@@ -11,18 +11,25 @@ import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.BlueMatrix.ble.BlueAction;
+import com.BlueMatrix.ble.RBLService;
 
 public class ScanDeviceActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter;
@@ -31,6 +38,9 @@ public class ScanDeviceActivity extends Activity {
 	private Dialog mDialog;
 	public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
 	public static ScanDeviceActivity instance = null;
+	//private RBLService mBluetoothLeService;
+	//public final static String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";
+	//public final static String EXTRA_DEVICE_NAME = "EXTRA_DEVICE_NAME";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +93,9 @@ public class ScanDeviceActivity extends Activity {
 			}
 		});
 
+		//Intent gattServiceIntent = new Intent(this, RBLService.class);
+		//bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
 		scanLeDevice();
 
 		showRoundProcessDialog(ScanDeviceActivity.this, R.layout.loading_process_dialog_anim);
@@ -101,6 +114,8 @@ public class ScanDeviceActivity extends Activity {
 
 		instance = this;
 	}
+
+
 
 	public void showRoundProcessDialog(Context mContext, int layout) {
 		OnKeyListener keyListener = new OnKeyListener() {
@@ -173,4 +188,42 @@ public class ScanDeviceActivity extends Activity {
 
 		System.exit(0);
 	}
+
+//	private final ServiceConnection mServiceConnection = new ServiceConnection() {
+//
+//		@Override
+//		public void onServiceConnected(ComponentName componentName,
+//									   IBinder service) {
+//			mBluetoothLeService = ((RBLService.LocalBinder) service)
+//					.getService();
+//			if (!mBluetoothLeService.initialize()) {
+//			//	Log.e(TAG, "Unable to initialize Bluetooth");
+//				finish();
+//			}
+//			// Automatically connects to the device upon successful start-up
+//			// initialization.
+//			//步骤1：创建一个SharedPreferences接口对象
+//			SharedPreferences read = getSharedPreferences("lock", MODE_WORLD_READABLE);
+//			//步骤2：获取文件中的值
+//			String value = read.getString("code", "");
+//			if(value != "")
+//			{
+//				Toast.makeText(getApplicationContext(), "口令为："+value, Toast.LENGTH_LONG).show();
+//				if(mBluetoothLeService.connect(value))
+//				{
+//
+//					Intent intent = new Intent(ScanDeviceActivity.this, MainMenuActivity.class);
+//					intent.putExtra(EXTRA_DEVICE_ADDRESS, value);
+//					intent.putExtra(EXTRA_DEVICE_NAME, "LED CONTROL2");
+//					startActivity(intent);
+//				}
+//			}
+//
+//		}
+//
+//		@Override
+//		public void onServiceDisconnected(ComponentName componentName) {
+//			mBluetoothLeService = null;
+//		}
+//	};
 }

@@ -33,7 +33,7 @@ public class DeviceActivity extends Activity implements OnItemClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.device_list);
 
-		setTitle("DeviceActivity");
+		setTitle("Device");
 
 		listView = (ListView) findViewById(R.id.listView);
 
@@ -64,7 +64,6 @@ public class DeviceActivity extends Activity implements OnItemClickListener {
 		intent.putExtra(EXTRA_DEVICE_ADDRESS, addr);
 		intent.putExtra(EXTRA_DEVICE_NAME, name);
 		startActivity(intent);
-		//ScanDeviceActivity.instance.finish();
 		finish();
 	}
 }

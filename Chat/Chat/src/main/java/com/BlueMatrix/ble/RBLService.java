@@ -46,6 +46,8 @@ public class RBLService extends Service {
 	private String mBluetoothDeviceAddress;
 	private BluetoothGatt mBluetoothGatt;
 
+	private boolean connect_flag = false;	//用于判断蓝牙是否已连接
+
 	public final static String ACTION_GATT_CONNECTED = "ACTION_GATT_CONNECTED";
 	public final static String ACTION_GATT_DISCONNECTED = "ACTION_GATT_DISCONNECTED";
 	public final static String ACTION_GATT_SERVICES_DISCOVERED = "ACTION_GATT_SERVICES_DISCOVERED";
@@ -57,8 +59,8 @@ public class RBLService extends Service {
 			.fromString(RBLGattAttributes.BLE_SHIELD_CUSTOMECOMMAND);
 	public final static UUID UUID_BLE_SHIELD_TEXTCOMMAND= UUID
 			.fromString(RBLGattAttributes.BLE_SHIELD_TEXTCOMMAND);
-	public final static UUID UUID_BLE_SHIELD_RX = UUID
-			.fromString(RBLGattAttributes.BLE_SHIELD_RX);
+	//public final static UUID UUID_BLE_SHIELD_RX = UUID
+	//		.fromString(RBLGattAttributes.BLE_SHIELD_RX);
 	public final static UUID UUID_BLE_SHIELD_REGULARCOMMAND = UUID
 			.fromString(RBLGattAttributes.BLE_SHIELD_REGULARCOMMAND);
     public final static UUID UUID_BLE_SHIELD_SERVICE = UUID
@@ -73,13 +75,14 @@ public class RBLService extends Service {
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
 				intentAction = ACTION_GATT_CONNECTED;
 				broadcastUpdate(intentAction);
-				Log.i(TAG, "Connected to GATT server.");
-				// Attempts to discover services after successful connection.
+				connect_flag = true;
+				System.out.println("CONNECTED");
 				Log.i(TAG, "Attempting to start service discovery:"
 						+ mBluetoothGatt.discoverServices());
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
 				intentAction = ACTION_GATT_DISCONNECTED;
-				Log.i(TAG, "Disconnected from GATT server.");
+				connect_flag = false;
+				System.out.println("UNCONNECTED");
 				broadcastUpdate(intentAction);
 			}
 		}
@@ -131,14 +134,10 @@ public class RBLService extends Service {
 			final BluetoothGattCharacteristic characteristic) {
 		final Intent intent = new Intent(action);
 
-		// This is special handling for the Heart Rate Measurement profile. Data
-		// parsing is
-		// carried out as per profile specifications:
-		// http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-		if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid())) {
-			final byte[] rx = characteristic.getValue();
-			intent.putExtra(EXTRA_DATA, rx);
-		}
+//		if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid())) {
+//			final byte[] rx = characteristic.getValue();
+//			intent.putExtra(EXTRA_DATA, rx);
+//		}
 
 		sendBroadcast(intent);
 	}
@@ -224,8 +223,7 @@ public class RBLService extends Service {
 			}
 		}
 
-		final BluetoothDevice device = mBluetoothAdapter
-				.getRemoteDevice(address);
+		final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 		if (device == null) {
 			Log.w(TAG, "DeviceActivity not found.  Unable to connect.");
 			return false;
@@ -264,6 +262,12 @@ public class RBLService extends Service {
 		}
 		mBluetoothGatt.close();
 		mBluetoothGatt = null;
+	}
+
+	// 检查是否连接
+	public boolean isConnected()
+	{
+		return connect_flag;
 	}
 
 	/**
@@ -318,14 +322,14 @@ public class RBLService extends Service {
 		}
 		mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
-		if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid())) {
-			BluetoothGattDescriptor descriptor = characteristic
-					.getDescriptor(UUID
-							.fromString(RBLGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-			descriptor
-					.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-			mBluetoothGatt.writeDescriptor(descriptor);
-		}
+//		if (UUID_BLE_SHIELD_RX.equals(characteristic.getUuid())) {
+//			BluetoothGattDescriptor descriptor = characteristic
+//					.getDescriptor(UUID
+//							.fromString(RBLGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+//			descriptor
+//					.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//			mBluetoothGatt.writeDescriptor(descriptor);
+//		}
 	}
 
 	/**

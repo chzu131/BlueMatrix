@@ -1,7 +1,6 @@
 package com.BlueMatrix.Activity;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -31,6 +30,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private String mDeviceAddress;
     private RBLService mBluetoothLeService;
     private BlueAction blueAction;  //提供蓝牙操作
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +176,19 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             }
             // Automatically connects to the device upon successful start-up
             // initialization.
-            mBluetoothLeService.connect(mDeviceAddress);
+            if(!mBluetoothLeService.isConnected())
+            {
+                mBluetoothLeService.connect(mDeviceAddress);
+            }
+
+//            String code = mDeviceAddress.trim();
+//            //步骤2-1：创建一个SharedPreferences.Editor接口对象，lock表示要写入的XML文件名，MODE_WORLD_WRITEABLE写操作
+//            SharedPreferences.Editor editor = getSharedPreferences("lock", MODE_WORLD_WRITEABLE).edit();
+//            //步骤2-2：将获取过来的值放入文件
+//            editor.putString("code", code);
+//            //步骤3：提交
+//            editor.commit();
+
             //初始化蓝牙操作类
             blueAction = new BlueAction(mBluetoothLeService);
         }
