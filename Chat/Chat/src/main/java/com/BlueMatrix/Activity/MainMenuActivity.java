@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -54,6 +55,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         menuUp.setOnClickListener(this);
 
         initBlueServiec();
+
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
 
     private void initBlueServiec() {
@@ -103,7 +106,6 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
 
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
 
     @Override
@@ -179,15 +181,16 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             if(!mBluetoothLeService.isConnected())
             {
                 mBluetoothLeService.connect(mDeviceAddress);
-            }
 
-//            String code = mDeviceAddress.trim();
-//            //步骤2-1：创建一个SharedPreferences.Editor接口对象，lock表示要写入的XML文件名，MODE_WORLD_WRITEABLE写操作
-//            SharedPreferences.Editor editor = getSharedPreferences("lock", MODE_WORLD_WRITEABLE).edit();
-//            //步骤2-2：将获取过来的值放入文件
-//            editor.putString("code", code);
-//            //步骤3：提交
-//            editor.commit();
+                String code = mDeviceAddress.trim();
+                //步骤2-1：创建一个SharedPreferences.Editor接口对象，lock表示要写入的XML文件名，MODE_WORLD_WRITEABLE写操作
+                SharedPreferences.Editor editor = getSharedPreferences("lock", MODE_WORLD_WRITEABLE).edit();
+                editor.clear();
+                //步骤2-2：将获取过来的值放入文件
+                editor.putString("code", code);
+                //步骤3：提交
+                editor.commit();
+            }
 
             //初始化蓝牙操作类
             blueAction = new BlueAction(mBluetoothLeService);

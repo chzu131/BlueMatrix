@@ -1,7 +1,10 @@
 package com.BlueMatrix.Activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -14,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
+import com.BlueMatrix.ble.RBLService;
 import com.BlueMatrix.view.CustomPreview;
 
 public class CustomTextActivity extends Activity implements View.OnClickListener {
@@ -48,7 +52,36 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         mPaint.setColor(0xff000000);
         mPaint.setTextSize(10);
         mPaint.setTypeface(typeface);
+
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+
+        intentFilter.addAction(RBLService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(RBLService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(RBLService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(RBLService.ACTION_DATA_AVAILABLE);
+
+        return intentFilter;
+    }
+
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (RBLService.ACTION_GATT_DISCONNECTED.equals(action))
+            {
+                //连接断开，返回
+                Intent intent2 = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
+                startActivity(intent2);
+                finish();
+            }
+
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -147,5 +180,12 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
             }
         }
         return drawCaches;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mGattUpdateReceiver);
+
     }
 }
