@@ -36,6 +36,7 @@ public class DeviceActivity extends Activity implements OnItemClickListener {
 		setTitle("Device");
 
 		listView = (ListView) findViewById(R.id.listView);
+		listItems.clear();
 
 		devices = (ArrayList<BluetoothDevice>) ScanDeviceActivity.mDevices;
 		for (BluetoothDevice device : devices) {

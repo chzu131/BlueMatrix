@@ -38,9 +38,12 @@ public class ScanDeviceActivity extends Activity {
 	private Dialog mDialog;
 	public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
 	public static ScanDeviceActivity instance = null;
+	private String PreviewMacAdress = null;	//存储上一次连接的蓝牙MAC地址
+	Timer mTimer;
+
 	//private RBLService mBluetoothLeService;
-	//public final static String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";
-	//public final static String EXTRA_DEVICE_NAME = "EXTRA_DEVICE_NAME";
+	public final static String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";
+	public final static String EXTRA_DEVICE_NAME = "EXTRA_DEVICE_NAME";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +82,7 @@ public class ScanDeviceActivity extends Activity {
 
 				showRoundProcessDialog(ScanDeviceActivity.this, R.layout.loading_process_dialog_anim);
 
-				Timer mTimer = new Timer();
+				mTimer = new Timer();
 				mTimer.schedule(new TimerTask() {
 
 					@Override
@@ -96,11 +99,11 @@ public class ScanDeviceActivity extends Activity {
 		//Intent gattServiceIntent = new Intent(this, RBLService.class);
 		//bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-		scanLeDevice();
 
 		showRoundProcessDialog(ScanDeviceActivity.this, R.layout.loading_process_dialog_anim);
 
-		Timer mTimer = new Timer();
+
+		mTimer = new Timer();
 		mTimer.schedule(new TimerTask() {
 
 			@Override
@@ -112,10 +115,26 @@ public class ScanDeviceActivity extends Activity {
 			}
 		}, SCAN_PERIOD);
 
+		scanLeDevice();
+
 		instance = this;
+
+		//步骤1：创建一个SharedPreferences接口对象
+		SharedPreferences read = getSharedPreferences("lock", MODE_WORLD_READABLE);
+		//步骤2：获取文件中的值
+		String value = read.getString("code", "");
+		if(value != "")
+		{
+			PreviewMacAdress = value;
+		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mDevices.clear();
 
+	}
 
 	public void showRoundProcessDialog(Context mContext, int layout) {
 		OnKeyListener keyListener = new OnKeyListener() {
@@ -163,8 +182,18 @@ public class ScanDeviceActivity extends Activity {
 				@Override
 				public void run() {
 					if (device != null) {
-						if (mDevices.indexOf(device) == -1)
+						if (mDevices.indexOf(device) == -1) {
 							mDevices.add(device);
+							//如果找到上次连接过的设备，直接连接
+							if(PreviewMacAdress.compareTo(device.getAddress()) == 0)
+							{
+								mTimer.cancel();
+								Intent intent = new Intent(ScanDeviceActivity.this, MainMenuActivity.class);
+								intent.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
+								intent.putExtra(EXTRA_DEVICE_NAME, device.getName());
+								startActivity(intent);
+							}
+						}
 					}
 				}
 			});
@@ -189,41 +218,4 @@ public class ScanDeviceActivity extends Activity {
 		System.exit(0);
 	}
 
-//	private final ServiceConnection mServiceConnection = new ServiceConnection() {
-//
-//		@Override
-//		public void onServiceConnected(ComponentName componentName,
-//									   IBinder service) {
-//			mBluetoothLeService = ((RBLService.LocalBinder) service)
-//					.getService();
-//			if (!mBluetoothLeService.initialize()) {
-//			//	Log.e(TAG, "Unable to initialize Bluetooth");
-//				finish();
-//			}
-//			// Automatically connects to the device upon successful start-up
-//			// initialization.
-//			//步骤1：创建一个SharedPreferences接口对象
-//			SharedPreferences read = getSharedPreferences("lock", MODE_WORLD_READABLE);
-//			//步骤2：获取文件中的值
-//			String value = read.getString("code", "");
-//			if(value != "")
-//			{
-//				Toast.makeText(getApplicationContext(), "口令为："+value, Toast.LENGTH_LONG).show();
-//				if(mBluetoothLeService.connect(value))
-//				{
-//
-//					Intent intent = new Intent(ScanDeviceActivity.this, MainMenuActivity.class);
-//					intent.putExtra(EXTRA_DEVICE_ADDRESS, value);
-//					intent.putExtra(EXTRA_DEVICE_NAME, "LED CONTROL2");
-//					startActivity(intent);
-//				}
-//			}
-//
-//		}
-//
-//		@Override
-//		public void onServiceDisconnected(ComponentName componentName) {
-//			mBluetoothLeService = null;
-//		}
-//	};
 }
