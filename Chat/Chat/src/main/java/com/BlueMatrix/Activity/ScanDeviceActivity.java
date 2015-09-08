@@ -11,16 +11,13 @@ import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,8 +25,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.BlueMatrix.ble.BlueAction;
-import com.BlueMatrix.ble.RBLService;
 
 public class ScanDeviceActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter;
@@ -40,6 +35,7 @@ public class ScanDeviceActivity extends Activity {
 	public static ScanDeviceActivity instance = null;
 	private String PreviewMacAdress = null;	//存储上一次连接的蓝牙MAC地址
 	Timer mTimer;
+	String DeviceName;	//设备名
 
 	//private RBLService mBluetoothLeService;
 	public final static String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";
@@ -51,6 +47,8 @@ public class ScanDeviceActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.main);
 
+		DeviceName = getResources().getString(R.string.deviceName);
+
 		if (!getPackageManager().hasSystemFeature(
 				PackageManager.FEATURE_BLUETOOTH_LE)) {
 			Toast.makeText(this, "Ble not supported", Toast.LENGTH_SHORT)
@@ -61,8 +59,7 @@ public class ScanDeviceActivity extends Activity {
 		final BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 		mBluetoothAdapter = mBluetoothManager.getAdapter();
 		if (mBluetoothAdapter == null) {
-			Toast.makeText(this, "Ble not supported", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Ble not supported", Toast.LENGTH_SHORT).show();
 			finish();
 			return;
 		}
@@ -183,15 +180,17 @@ public class ScanDeviceActivity extends Activity {
 				public void run() {
 					if (device != null) {
 						if (mDevices.indexOf(device) == -1) {
-							mDevices.add(device);
-							//如果找到上次连接过的设备，直接连接
-							if(PreviewMacAdress.compareTo(device.getAddress()) == 0)
-							{
-								mTimer.cancel();
-								Intent intent = new Intent(ScanDeviceActivity.this, MainMenuActivity.class);
-								intent.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
-								intent.putExtra(EXTRA_DEVICE_NAME, device.getName());
-								startActivity(intent);
+							//过滤掉其它设备
+							if (device.getName().compareTo(DeviceName) == 0){
+								mDevices.add(device);
+								//如果找到上次连接过的设备，直接连接
+								if (PreviewMacAdress.compareTo(device.getAddress()) == 0) {
+									mTimer.cancel();
+									Intent intent = new Intent(ScanDeviceActivity.this, MainMenuActivity.class);
+									intent.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
+									intent.putExtra(EXTRA_DEVICE_NAME, device.getName());
+									startActivity(intent);
+								}
 							}
 						}
 					}
