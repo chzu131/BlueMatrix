@@ -13,7 +13,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_selector"
-            android:text="返回" />
+            android:text="BACK" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -65,14 +65,14 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="50dp"
             android:background="@drawable/button_selector"
-            android:text="确定" />
+            android:text="SET" />
 
         <Button
             android:id="@+id/reset"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_selector"
-            android:text="重置" />
+            android:text="RESET" />
 
     </LinearLayout>
 

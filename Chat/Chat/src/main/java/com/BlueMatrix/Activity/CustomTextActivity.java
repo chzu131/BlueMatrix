@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -24,6 +25,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
 
     private EditText mCustomText;
     private Button mPreviewButton;
+    private Button mDisconnetButton;
     private Button mSendButton;
     private Button mBackButton;
     private CustomPreview mCustomPreview;
@@ -43,6 +45,9 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         mCustomText.setDrawingCacheEnabled(true);
         mPreviewButton = (Button) findViewById(R.id.preview_button);
         mPreviewButton.setOnClickListener(this);
+        mDisconnetButton = (Button) findViewById(R.id.disconnet_button);
+        mDisconnetButton.setOnClickListener(this);
+
         mSendButton = (Button) findViewById(R.id.send_button);
         mSendButton.setOnClickListener(this);
         mBackButton = (Button) findViewById(R.id.back);
@@ -87,6 +92,21 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
+            case R.id.disconnet_button:
+            {
+                BlueAction blueAction= new BlueAction();
+                blueAction.DisconnectBT();
+                //步骤2-1：创建一个SharedPreferences.Editor接口对象，lock表示要写入的XML文件名，MODE_WORLD_WRITEABLE写操作
+                SharedPreferences.Editor editor = getSharedPreferences("lock", MODE_WORLD_WRITEABLE).edit();
+                //editor.clear();
+                //步骤2-2：将获取过来的值放入文件
+                editor.putString("code", "");
+                //步骤3：提交
+                editor.commit();
+                Intent intent = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.preview_button :
                 if(!CheckText())
                 {

@@ -27,6 +27,12 @@ public class BlueAction {
     {
         mBluetoothLeService = service;
     }
+
+    public void DisconnectBT()
+    {
+        mBluetoothLeService.disconnect();
+    }
+
     //传送自定义图案
     public void SendCustomPattern(byte data[])
     {

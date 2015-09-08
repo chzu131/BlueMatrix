@@ -5,6 +5,22 @@
     android:background="#018ae8">
 
     <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="20dp">
+    <Button
+        android:id="@+id/disconnet_button"
+        android:layout_width="100dp"
+
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_selector"
+        android:layout_gravity="right"
+        android:textColor="#FF018ae8"
+        android:textStyle="bold"
+        android:text="Disconnet" />
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"

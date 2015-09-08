@@ -64,7 +64,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_ADDRESS);
         mDeviceName = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_NAME);
         getActionBar().setTitle(mDeviceName);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, RBLService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
@@ -170,8 +170,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         @Override
         public void onServiceConnected(ComponentName componentName,
                                        IBinder service) {
-            mBluetoothLeService = ((RBLService.LocalBinder) service)
-                    .getService();
+            mBluetoothLeService = ((RBLService.LocalBinder) service).getService();
             if (!mBluetoothLeService.initialize()) {
                 Log.e(TAG, "Unable to initialize Bluetooth");
                 finish();

@@ -181,16 +181,19 @@ public class ScanDeviceActivity extends Activity {
 					if (device != null) {
 						if (mDevices.indexOf(device) == -1) {
 							//过滤掉其它设备
-							if (device.getName().compareTo(DeviceName) == 0){
+							if (device.getName().compareTo(DeviceName) == 0) {
 								mDevices.add(device);
 								//如果找到上次连接过的设备，直接连接
-								if (PreviewMacAdress.compareTo(device.getAddress()) == 0) {
-									mTimer.cancel();
-									Intent intent = new Intent(ScanDeviceActivity.this, MainMenuActivity.class);
-									intent.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
-									intent.putExtra(EXTRA_DEVICE_NAME, device.getName());
-									startActivity(intent);
+								if (PreviewMacAdress != null) {
+									if (PreviewMacAdress.compareTo(device.getAddress()) == 0) {
+										mTimer.cancel();
+										Intent intent = new Intent(ScanDeviceActivity.this, MainMenuActivity.class);
+										intent.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
+										intent.putExtra(EXTRA_DEVICE_NAME, device.getName());
+										startActivity(intent);
+									}
 								}
+
 							}
 						}
 					}
