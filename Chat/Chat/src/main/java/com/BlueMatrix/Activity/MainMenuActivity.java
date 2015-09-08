@@ -30,7 +30,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private String mDeviceName;
     private String mDeviceAddress;
     private RBLService mBluetoothLeService;
-    private BlueAction blueAction;  //提供蓝牙操作
+    private static BlueAction blueAction;  //提供蓝牙操作
 
 
 
@@ -81,11 +81,15 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             }
             case R.id.menu_left:
                 Toast.makeText(this, "你选择了向左", Toast.LENGTH_LONG).show();
-                blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
+                if(blueAction != null) {
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
+                }
                 break;
             case R.id.menu_right:
                 Toast.makeText(this, "你选择了向右", Toast.LENGTH_LONG).show();
-                blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
+                if(blueAction != null) {
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
+                }
                 break;
             case R.id.menu_down: {
                 Intent intent = new Intent();
@@ -95,7 +99,9 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             }
 
             case R.id.menu_up:
-                blueAction.PatternRegularCommand(BlueAction.PATTERN_UP);
+                if(blueAction != null) {
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_UP);
+                }
                 break;
             default:
                 break;
@@ -177,7 +183,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             }
             // Automatically connects to the device upon successful start-up
             // initialization.
-            if(!mBluetoothLeService.isConnected())
+            if(!mBluetoothLeService.isConnected() && (mDeviceAddress != null) )
             {
                 mBluetoothLeService.connect(mDeviceAddress);
 
@@ -189,10 +195,12 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 editor.putString("code", code);
                 //步骤3：提交
                 editor.commit();
-            }
 
+
+            }
             //初始化蓝牙操作类
             blueAction = new BlueAction(mBluetoothLeService);
+
         }
 
         @Override

@@ -46,7 +46,7 @@ public class RBLService extends Service {
 	private String mBluetoothDeviceAddress;
 	private BluetoothGatt mBluetoothGatt;
 
-	private boolean connect_flag = false;	//用于判断蓝牙是否已连接
+	private static boolean connect_flag = false;	//用于判断蓝牙是否已连接
 
 	public final static String ACTION_GATT_CONNECTED = "ACTION_GATT_CONNECTED";
 	public final static String ACTION_GATT_DISCONNECTED = "ACTION_GATT_DISCONNECTED";

@@ -33,6 +33,11 @@ public class BlueAction {
         mBluetoothLeService.disconnect();
     }
 
+    public boolean IsConnectBT()
+    {
+        return mBluetoothLeService.isConnected();
+    }
+
     //传送自定义图案
     public void SendCustomPattern(byte data[])
     {

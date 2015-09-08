@@ -129,7 +129,8 @@ public class ScanDeviceActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mDevices.clear();
+		if(mDevices != null)
+			mDevices.clear();
 
 	}
 

@@ -96,6 +96,20 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
     };
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        //初始化蓝牙操作类
+        BlueAction blueAction= new BlueAction();
+        if(!blueAction.IsConnectBT())
+        {
+            //连接断开，返回
+            Intent intent2 = new Intent(NewCustomActivity.this, ScanDeviceActivity.class);
+            startActivity(intent2);
+            //finish();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.send) {

@@ -72,6 +72,20 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         return intentFilter;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //初始化蓝牙操作类
+        BlueAction blueAction= new BlueAction();
+        if(!blueAction.IsConnectBT())
+        {
+            //连接断开，返回
+            Intent intent2 = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
+            startActivity(intent2);
+            //finish();
+        }
+    }
+
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
