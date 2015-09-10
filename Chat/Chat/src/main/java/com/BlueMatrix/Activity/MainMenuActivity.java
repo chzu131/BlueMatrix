@@ -13,10 +13,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
+import com.BlueMatrix.sound.Memory;
 import com.BlueMatrix.sound.Sound;
 
 public class MainMenuActivity extends Activity implements View.OnClickListener {
@@ -27,12 +29,13 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private View menuRight;
     private View menuDown;
     private View menuUp;
+    private View mDisconnetButton;
 
     private String mDeviceName;
     private String mDeviceAddress;
     private RBLService mBluetoothLeService;
     private static BlueAction blueAction;  //提供蓝牙操作
-
+    Memory memory;
     //private Sound sound;
 
     @Override
@@ -55,11 +58,15 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         menuUp = findViewById(R.id.menu_up);
         menuUp.setOnClickListener(this);
 
+        mDisconnetButton = findViewById(R.id.disconnet_button);
+        mDisconnetButton.setOnClickListener(this);
+
         initBlueServiec();
 
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         //sound = new Sound();
         //sound.initSoundPool(this);
+        memory = new Memory(this);
     }
 
     private void initBlueServiec() {
@@ -76,6 +83,17 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
+            case R.id.disconnet_button:
+            {
+                BlueAction blueAction= new BlueAction();
+                blueAction.DisconnectBT();
+                Memory memory = new Memory(this);
+                memory.ClearLastMacAddress();
+
+                Intent intent = new Intent(this, ScanDeviceActivity.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.menu_cneter: {
                 Intent intent = new Intent();
                 intent.setClass(MainMenuActivity.this, CustomTextActivity.class);
@@ -83,13 +101,13 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 break;
             }
             case R.id.menu_left:
-                Toast.makeText(this, "你选择了向左", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
                 }
                 break;
             case R.id.menu_right:
-                Toast.makeText(this, "你选择了向右", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Turn right", Toast.LENGTH_LONG).show();
 
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
@@ -191,17 +209,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             if(!mBluetoothLeService.isConnected() && (mDeviceAddress != null) )
             {
                 mBluetoothLeService.connect(mDeviceAddress);
-
-                String code = mDeviceAddress.trim();
-                //步骤2-1：创建一个SharedPreferences.Editor接口对象，lock表示要写入的XML文件名，MODE_WORLD_WRITEABLE写操作
-                SharedPreferences.Editor editor = getSharedPreferences("lock", MODE_WORLD_WRITEABLE).edit();
-                editor.clear();
-                //步骤2-2：将获取过来的值放入文件
-                editor.putString("code", code);
-                //步骤3：提交
-                editor.commit();
-
-
+                memory.SaveMacAddress(mDeviceAddress);
             }
             //初始化蓝牙操作类
             blueAction = new BlueAction(mBluetoothLeService);

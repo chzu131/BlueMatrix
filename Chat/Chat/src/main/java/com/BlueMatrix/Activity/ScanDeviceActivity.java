@@ -25,6 +25,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.BlueMatrix.sound.Memory;
+
 
 public class ScanDeviceActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter;
@@ -32,7 +34,7 @@ public class ScanDeviceActivity extends Activity {
 	private static final long SCAN_PERIOD = 3000;
 	private Dialog mDialog;
 	public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
-	public static ScanDeviceActivity instance = null;
+
 	private String PreviewMacAdress = null;	//存储上一次连接的蓝牙MAC地址
 	Timer mTimer;
 	String DeviceName;	//设备名
@@ -114,16 +116,8 @@ public class ScanDeviceActivity extends Activity {
 
 		scanLeDevice();
 
-		instance = this;
-
-		//步骤1：创建一个SharedPreferences接口对象
-		SharedPreferences read = getSharedPreferences("lock", MODE_WORLD_READABLE);
-		//步骤2：获取文件中的值
-		String value = read.getString("code", "");
-		if(value != "")
-		{
-			PreviewMacAdress = value;
-		}
+		Memory memory = new Memory(this);
+		PreviewMacAdress = memory.GetLastMacAddress();
 	}
 
 	@Override

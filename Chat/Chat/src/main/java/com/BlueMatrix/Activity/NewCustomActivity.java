@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
+import com.BlueMatrix.sound.Memory;
 import com.BlueMatrix.view.CustomView;
 
 public class NewCustomActivity extends Activity implements View.OnClickListener, RadioButton.OnCheckedChangeListener {
@@ -24,6 +25,7 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
     private Button mResetBotton;
     private Button mBackBotton;
     private CustomView mCustomView;
+    private Button mDisconnetButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,11 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
         mBackBotton = (Button) findViewById(R.id.back);
         mBackBotton.setOnClickListener(this);
 
+        mDisconnetButton = (Button) findViewById(R.id.disconnet_button);
+        mDisconnetButton.setOnClickListener(this);
+
         mCustomView = (CustomView) findViewById(R.id.custom_view);
+
 
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
@@ -99,14 +105,14 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
     protected void onResume() {
         super.onResume();
         //初始化蓝牙操作类
-        BlueAction blueAction= new BlueAction();
-        if(!blueAction.IsConnectBT())
-        {
-            //连接断开，返回
-            Intent intent2 = new Intent(NewCustomActivity.this, ScanDeviceActivity.class);
-            startActivity(intent2);
-            //finish();
-        }
+//        BlueAction blueAction= new BlueAction();
+//        if(!blueAction.IsConnectBT())
+//        {
+//            //连接断开，返回
+//            Intent intent2 = new Intent(NewCustomActivity.this, ScanDeviceActivity.class);
+//            startActivity(intent2);
+//            //finish();
+//        }
     }
 
     @Override
@@ -114,10 +120,18 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
         int id = v.getId();
         if (id == R.id.send) {
             byte[] customData = mCustomView.getCustomData();
-            Toast.makeText(this, "系统处理中...", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "System processing...", Toast.LENGTH_LONG).show();
             BlueAction blueAction= new BlueAction();
             blueAction.SendCustomPattern(customData);
-        } else if (id == R.id.reset) {
+        } else if(id == R.id.disconnet_button){
+            BlueAction blueAction= new BlueAction();
+            blueAction.DisconnectBT();
+            Memory memory = new Memory(this);
+            memory.ClearLastMacAddress();
+
+            Intent intent = new Intent(getApplicationContext(), ScanDeviceActivity.class);
+            startActivity(intent);
+        }else if (id == R.id.reset) {
             mCustomView.resetData();
         } else if (id == R.id.back) {
             Intent intent = new Intent();

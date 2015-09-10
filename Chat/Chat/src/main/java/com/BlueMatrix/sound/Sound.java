@@ -13,15 +13,13 @@ import java.util.HashMap;
  */
 public class Sound {
     private static SoundPool pool = null;
-    private int sourceid;
+    private static int sourceid;
 
     public void initSoundPool(Context context) {
         //指定声音池的最大音频流数目为10，声音品质为5
         pool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
         //载入音频流，返回在池中的id
        sourceid = pool.load(context, R.raw.shot, 0);
-
-
     }
 
     public void playSound(){

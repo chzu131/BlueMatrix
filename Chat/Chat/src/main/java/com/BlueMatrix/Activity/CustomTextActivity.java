@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
+import com.BlueMatrix.sound.Memory;
 import com.BlueMatrix.view.CustomPreview;
 
 public class CustomTextActivity extends Activity implements View.OnClickListener {
@@ -76,14 +77,14 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     protected void onResume() {
         super.onResume();
         //初始化蓝牙操作类
-        BlueAction blueAction= new BlueAction();
-        if(!blueAction.IsConnectBT())
-        {
-            //连接断开，返回
-            Intent intent2 = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
-            startActivity(intent2);
-            //finish();
-        }
+//        BlueAction blueAction= new BlueAction();
+//        if(!blueAction.IsConnectBT())
+//        {
+//            //连接断开，返回
+//            Intent intent2 = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
+//            startActivity(intent2);
+//            //finish();
+//        }
     }
 
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
@@ -110,13 +111,9 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
             {
                 BlueAction blueAction= new BlueAction();
                 blueAction.DisconnectBT();
-                //步骤2-1：创建一个SharedPreferences.Editor接口对象，lock表示要写入的XML文件名，MODE_WORLD_WRITEABLE写操作
-                SharedPreferences.Editor editor = getSharedPreferences("lock", MODE_WORLD_WRITEABLE).edit();
-                //editor.clear();
-                //步骤2-2：将获取过来的值放入文件
-                editor.putString("code", "");
-                //步骤3：提交
-                editor.commit();
+                Memory memory = new Memory(this);
+                memory.ClearLastMacAddress();
+
                 Intent intent = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
                 startActivity(intent);
                 break;
