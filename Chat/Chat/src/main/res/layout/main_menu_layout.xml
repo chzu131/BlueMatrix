@@ -7,7 +7,7 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingRight="20dp">
+        android:layout_margin="10dp">
     <Button
         android:id="@+id/disconnet_button"
         android:layout_width="100dp"

@@ -49,6 +49,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         menuLeft = findViewById(R.id.menu_left);
         menuLeft.setOnClickListener(this);
 
+
         menuRight = findViewById(R.id.menu_right);
         menuRight.setOnClickListener(this);
 
@@ -60,6 +61,13 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         mDisconnetButton = findViewById(R.id.disconnet_button);
         mDisconnetButton.setOnClickListener(this);
+
+        menuLeft.setEnabled(false);
+        menuUp.setEnabled(false);
+        menuRight.setEnabled(false);
+        menuCenter.setEnabled(false);
+        menuDown.setEnabled(false);
+        mDisconnetButton.setEnabled(false);
 
         initBlueServiec();
 
@@ -175,6 +183,15 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 Intent intent2 = new Intent(MainMenuActivity.this, ScanDeviceActivity.class);
                 startActivity(intent2);
                 //finish();
+            }
+            else if (RBLService.ACTION_GATT_CONNECTED.equals(action))
+            {
+                menuLeft.setEnabled(true);
+                menuUp.setEnabled(true);
+                menuRight.setEnabled(true);
+                menuCenter.setEnabled(true);
+                menuDown.setEnabled(true);
+                mDisconnetButton.setEnabled(true);
             }
             else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action))
             {
