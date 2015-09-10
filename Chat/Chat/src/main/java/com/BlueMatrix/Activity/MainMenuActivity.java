@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
+import com.BlueMatrix.sound.Sound;
 
 public class MainMenuActivity extends Activity implements View.OnClickListener {
     private final static String TAG = MainMenuActivity.class.getSimpleName();
@@ -32,7 +33,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private RBLService mBluetoothLeService;
     private static BlueAction blueAction;  //提供蓝牙操作
 
-
+    //private Sound sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         initBlueServiec();
 
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        //sound = new Sound();
+        //sound.initSoundPool(this);
     }
 
     private void initBlueServiec() {
@@ -64,7 +67,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_ADDRESS);
         mDeviceName = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_NAME);
         getActionBar().setTitle(mDeviceName);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent gattServiceIntent = new Intent(this, RBLService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
@@ -87,6 +90,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.menu_right:
                 Toast.makeText(this, "你选择了向右", Toast.LENGTH_LONG).show();
+
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
                 }
@@ -148,10 +152,11 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
             if (RBLService.ACTION_GATT_DISCONNECTED.equals(action))
             {
+                //sound.playSound();
                 //连接断开，返回
                 Intent intent2 = new Intent(MainMenuActivity.this, ScanDeviceActivity.class);
                 startActivity(intent2);
-                finish();
+                //finish();
             }
             else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action))
             {

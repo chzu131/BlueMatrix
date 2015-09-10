@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Chat/src/main/res/raw/arrow.mp3" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Chat/src/main/res/raw/bomb.mp3" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Chat/src/main/res/raw/shot.mp3" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
