@@ -62,12 +62,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         mDisconnetButton = findViewById(R.id.disconnet_button);
         mDisconnetButton.setOnClickListener(this);
 
-        menuLeft.setEnabled(false);
-        menuUp.setEnabled(false);
-        menuRight.setEnabled(false);
-        menuCenter.setEnabled(false);
-        menuDown.setEnabled(false);
-        mDisconnetButton.setEnabled(false);
+
 
         initBlueServiec();
 
@@ -109,13 +104,13 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 break;
             }
             case R.id.menu_left:
-                Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
+               // Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
                 }
                 break;
             case R.id.menu_right:
-                Toast.makeText(this, "Turn right", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "Turn right", Toast.LENGTH_LONG).show();
 
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
@@ -170,6 +165,16 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         return intentFilter;
     }
+    //设置按键状态
+    private void SetButtonStauts(boolean flag)
+    {
+        menuLeft.setEnabled(flag);
+        menuUp.setEnabled(flag);
+        menuRight.setEnabled(flag);
+        menuCenter.setEnabled(flag);
+        menuDown.setEnabled(flag);
+        mDisconnetButton.setEnabled(flag);
+    }
 
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -186,12 +191,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             }
             else if (RBLService.ACTION_GATT_CONNECTED.equals(action))
             {
-                menuLeft.setEnabled(true);
-                menuUp.setEnabled(true);
-                menuRight.setEnabled(true);
-                menuCenter.setEnabled(true);
-                menuDown.setEnabled(true);
-                mDisconnetButton.setEnabled(true);
+                //设置按键状态
+                SetButtonStauts(true);
             }
             else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action))
             {
@@ -225,6 +226,9 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             // initialization.
             if(!mBluetoothLeService.isConnected() && (mDeviceAddress != null) )
             {
+                //设置按键状态
+                SetButtonStauts(false);
+
                 mBluetoothLeService.connect(mDeviceAddress);
                 memory.SaveMacAddress(mDeviceAddress);
             }

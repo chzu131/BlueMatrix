@@ -67,12 +67,7 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
         return intentFilter;
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(mGattUpdateReceiver);
 
-    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -105,14 +100,14 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
     protected void onResume() {
         super.onResume();
         //初始化蓝牙操作类
-//        BlueAction blueAction= new BlueAction();
-//        if(!blueAction.IsConnectBT())
-//        {
-//            //连接断开，返回
-//            Intent intent2 = new Intent(NewCustomActivity.this, ScanDeviceActivity.class);
-//            startActivity(intent2);
-//            //finish();
-//        }
+        BlueAction blueAction= new BlueAction();
+        if(!blueAction.IsConnectBT())
+        {
+            //连接断开，返回
+            Intent intent2 = new Intent(NewCustomActivity.this, ScanDeviceActivity.class);
+            startActivity(intent2);
+            finish();
+        }
     }
 
     @Override
