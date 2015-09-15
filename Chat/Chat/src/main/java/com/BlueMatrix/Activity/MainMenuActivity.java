@@ -37,8 +37,6 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private Direction mDirectionService;
     private static BlueAction blueAction;  //提供蓝牙操作
     Memory memory;
-    Direction direction;    //用于检测手机方向
-    //Timer mTimer;
     //private Sound sound;
 
     @Override
@@ -65,25 +63,11 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         mDisconnetButton = findViewById(R.id.disconnet_button);
         mDisconnetButton.setOnClickListener(this);
 
-
-
         initBlueServiec();
 
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         //sound = new Sound();
         //sound.initSoundPool(this);
         memory = new Memory(this);
-
-
-//        mTimer = new Timer();
-//        mTimer.schedule(new TimerTask() {
-//
-//            @Override
-//            public void run() {
-//                System.out.print(direction.GetYaw());
-//                System.out.print("\n");
-//            }
-//        }, 1000);
     }
 
     private void initBlueServiec() {
@@ -152,14 +136,13 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         unregisterReceiver(mGattUpdateReceiver);
-
     }
 
     @Override
@@ -248,7 +231,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         }
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-
+            mDirectionService = null;
         }
     };
 
