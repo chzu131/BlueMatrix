@@ -8,12 +8,10 @@ import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.BlueMatrix.ble.RBLService;
-
 /**
  * Created by chzu131 on 2015/9/14.
  */
-public class Direction extends Service {
+public class DirectionService extends Service {
     private static SensorManager mySensorManager;
     private static float Yaw = 0, Pitch = 0, Roll = 0;
     private static float LastYaw = 0;
@@ -24,12 +22,12 @@ public class Direction extends Service {
     public final static String ACTION_DIRCTION_LEFT = "ACTION_DIRCTION_LEFT";
     public final static String ACTION_DIRCTION_RIGHT = "ACTION_DIRCTION_RIGHT";
 
-    public Direction()
+    public DirectionService()
     {}
 
     public class LocalBinder extends Binder {
-        public Direction getService() {
-            return Direction.this;
+        public DirectionService getService() {
+            return DirectionService.this;
         }
     }
 

@@ -15,11 +15,8 @@ import android.view.View;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
-import com.BlueMatrix.tools.Direction;
+import com.BlueMatrix.tools.DirectionService;
 import com.BlueMatrix.tools.Memory;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainMenuActivity extends Activity implements View.OnClickListener {
     private final static String TAG = MainMenuActivity.class.getSimpleName();
@@ -34,7 +31,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private String mDeviceName;
     private String mDeviceAddress;
     private RBLService mBluetoothLeService;
-    private Direction mDirectionService;
+    private DirectionService mDirectionService;
     private static BlueAction blueAction;  //提供蓝牙操作
     Memory memory;
     //private Sound sound;
@@ -78,7 +75,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         Intent gattServiceIntent = new Intent(this, RBLService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-        Intent gattDirectionServiceIntent = new Intent(this, Direction.class);
+        Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
         bindService(gattDirectionServiceIntent, mDirectionServiceConnection, BIND_AUTO_CREATE);
     }
 
@@ -162,8 +159,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         intentFilter.addAction(RBLService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(RBLService.ACTION_DATA_AVAILABLE);
 
-        intentFilter.addAction(Direction.ACTION_DIRCTION_LEFT);
-        intentFilter.addAction(Direction.ACTION_DIRCTION_RIGHT);
+        intentFilter.addAction(DirectionService.ACTION_DIRCTION_LEFT);
+        intentFilter.addAction(DirectionService.ACTION_DIRCTION_RIGHT);
 
         return intentFilter;
     }
@@ -183,10 +180,10 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
 
-            if (Direction.ACTION_DIRCTION_LEFT.equals(action)) {
+            if (DirectionService.ACTION_DIRCTION_LEFT.equals(action)) {
                 blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
             }
-            if (Direction.ACTION_DIRCTION_RIGHT.equals(action)) {
+            if (DirectionService.ACTION_DIRCTION_RIGHT.equals(action)) {
                 blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
 
             }
@@ -226,7 +223,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private final ServiceConnection mDirectionServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
-            mDirectionService = ((Direction.LocalBinder) service).getService();
+            mDirectionService = ((DirectionService.LocalBinder) service).getService();
             mDirectionService.init(MainMenuActivity.this);
         }
         @Override
