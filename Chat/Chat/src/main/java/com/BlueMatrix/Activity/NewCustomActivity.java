@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
-import com.BlueMatrix.sound.Memory;
+import com.BlueMatrix.tools.Memory;
 import com.BlueMatrix.view.CustomView;
 
 public class NewCustomActivity extends Activity implements View.OnClickListener, RadioButton.OnCheckedChangeListener {

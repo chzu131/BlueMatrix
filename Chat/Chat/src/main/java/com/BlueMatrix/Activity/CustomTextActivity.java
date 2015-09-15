@@ -5,10 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,7 +17,7 @@ import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
-import com.BlueMatrix.sound.Memory;
+import com.BlueMatrix.tools.Memory;
 import com.BlueMatrix.view.CustomPreview;
 
 public class CustomTextActivity extends Activity implements View.OnClickListener {
@@ -213,5 +211,5 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         return drawCaches;
     }
 
-    
+
 }

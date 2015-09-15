@@ -8,18 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
-import com.BlueMatrix.sound.Memory;
-import com.BlueMatrix.sound.Sound;
+import com.BlueMatrix.tools.Direction;
+import com.BlueMatrix.tools.Memory;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainMenuActivity extends Activity implements View.OnClickListener {
     private final static String TAG = MainMenuActivity.class.getSimpleName();
@@ -34,8 +34,11 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private String mDeviceName;
     private String mDeviceAddress;
     private RBLService mBluetoothLeService;
+    private Direction mDirectionService;
     private static BlueAction blueAction;  //提供蓝牙操作
     Memory memory;
+    Direction direction;    //用于检测手机方向
+    //Timer mTimer;
     //private Sound sound;
 
     @Override
@@ -70,6 +73,17 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         //sound = new Sound();
         //sound.initSoundPool(this);
         memory = new Memory(this);
+
+
+//        mTimer = new Timer();
+//        mTimer.schedule(new TimerTask() {
+//
+//            @Override
+//            public void run() {
+//                System.out.print(direction.GetYaw());
+//                System.out.print("\n");
+//            }
+//        }, 1000);
     }
 
     private void initBlueServiec() {
@@ -80,6 +94,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         Intent gattServiceIntent = new Intent(this, RBLService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        Intent gattDirectionServiceIntent = new Intent(this, Direction.class);
+        bindService(gattDirectionServiceIntent, mDirectionServiceConnection, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -163,6 +179,9 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         intentFilter.addAction(RBLService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(RBLService.ACTION_DATA_AVAILABLE);
 
+        intentFilter.addAction(Direction.ACTION_DIRCTION_LEFT);
+        intentFilter.addAction(Direction.ACTION_DIRCTION_RIGHT);
+
         return intentFilter;
     }
     //设置按键状态
@@ -180,6 +199,14 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
+
+            if (Direction.ACTION_DIRCTION_LEFT.equals(action)) {
+                blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
+            }
+            if (Direction.ACTION_DIRCTION_RIGHT.equals(action)) {
+                blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
+
+            }
 
             if (RBLService.ACTION_GATT_DISCONNECTED.equals(action))
             {
@@ -211,6 +238,19 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         blueAction.getGattService(gattService);
     }
+
+
+    private final ServiceConnection mDirectionServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            mDirectionService = ((Direction.LocalBinder) service).getService();
+            mDirectionService.init(MainMenuActivity.this);
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 

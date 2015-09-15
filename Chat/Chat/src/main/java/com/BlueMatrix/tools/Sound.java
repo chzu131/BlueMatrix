@@ -1,12 +1,10 @@
-package com.BlueMatrix.sound;
+package com.BlueMatrix.tools;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
 import com.BlueMatrix.Activity.R;
-
-import java.util.HashMap;
 
 /**
  * Created by chzu131 on 2015/9/9.

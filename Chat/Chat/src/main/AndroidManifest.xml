@@ -54,6 +54,9 @@
         <service
             android:name="com.BlueMatrix.ble.RBLService"
             android:enabled="true" />
+        <service
+            android:name="com.BlueMatrix.tools.Direction"
+            android:enabled="true" />
     </application>
 
 </manifest>
