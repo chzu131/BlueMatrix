@@ -47,7 +47,6 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         menuLeft = findViewById(R.id.menu_left);
         menuLeft.setOnClickListener(this);
 
-
         menuRight = findViewById(R.id.menu_right);
         menuRight.setOnClickListener(this);
 
@@ -62,9 +61,11 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         initBlueServiec();
 
-        //sound = new Sound();
-        //sound.initSoundPool(this);
         memory = new Memory(this);
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);// 屏幕熄掉后依然运行
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(mDirectionService.mReceiver, filter);
     }
 
     private void initBlueServiec() {
@@ -75,7 +76,9 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         Intent gattServiceIntent = new Intent(this, RBLService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
         Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
+       // startService(gattDirectionServiceIntent);
         bindService(gattDirectionServiceIntent, mDirectionServiceConnection, BIND_AUTO_CREATE);
     }
 
@@ -95,6 +98,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 break;
             }
             case R.id.menu_cneter: {
+                StopDirectionService();
+
                 Intent intent = new Intent();
                 intent.setClass(MainMenuActivity.this, CustomTextActivity.class);
                 startActivity(intent);
@@ -114,6 +119,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.menu_down: {
+                StopDirectionService();
+
                 Intent intent = new Intent();
                 intent.setClass(MainMenuActivity.this, NewCustomActivity.class);
                 startActivity(intent);
@@ -133,22 +140,13 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        registerReceiver(mServiceUpdateReceiver, makeGattUpdateIntentFilter());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        //断开连接
-        mBluetoothLeService.disconnect();
-        mBluetoothLeService.close();
+        unregisterReceiver(mServiceUpdateReceiver);
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -175,26 +173,26 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         mDisconnetButton.setEnabled(flag);
     }
 
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mServiceUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-
+            //方向命令
             if (DirectionService.ACTION_DIRCTION_LEFT.equals(action)) {
                 blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
             }
-            if (DirectionService.ACTION_DIRCTION_RIGHT.equals(action)) {
+            else if (DirectionService.ACTION_DIRCTION_RIGHT.equals(action)) {
                 blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
-
             }
 
+            //蓝牙命令
             if (RBLService.ACTION_GATT_DISCONNECTED.equals(action))
             {
-                //sound.playSound();
+                StopDirectionService();
+
                 //连接断开，返回
                 Intent intent2 = new Intent(MainMenuActivity.this, ScanDeviceActivity.class);
                 startActivity(intent2);
-                //finish();
             }
             else if (RBLService.ACTION_GATT_CONNECTED.equals(action))
             {
@@ -226,11 +224,18 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             mDirectionService = ((DirectionService.LocalBinder) service).getService();
             mDirectionService.init(MainMenuActivity.this);
         }
+
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
+
             mDirectionService = null;
         }
     };
+
+    private void StopDirectionService(){
+        Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
+        unbindService(mDirectionServiceConnection);
+    }
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -262,6 +267,5 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             mBluetoothLeService = null;
         }
     };
-
 
 }

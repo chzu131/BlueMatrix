@@ -175,8 +175,8 @@ public class ScanDeviceActivity extends Activity {
 					if (device != null) {
 						if (mDevices.indexOf(device) == -1) {
 							//过滤掉其它设备
-							if ((device.getName()!=null)
-									&&(device.getName().compareTo(DeviceName) == 0)) {
+							if ( (device.getName()!=null) &&
+									(device.getName().compareTo(DeviceName) == 0)) {
 								mDevices.add(device);
 								//如果找到上次连接过的设备，直接连接
 								if (PreviewMacAdress != null) {

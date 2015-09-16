@@ -30,9 +30,12 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.BlueMatrix.tools.DirectionService;
 
 /**
  * Service for managing connection and data communication with a GATT server
@@ -65,6 +68,7 @@ public class RBLService extends Service {
 			.fromString(RBLGattAttributes.BLE_SHIELD_REGULARCOMMAND);
     public final static UUID UUID_BLE_SHIELD_SERVICE = UUID
             .fromString(RBLGattAttributes.BLE_SHIELD_SERVICE);
+
 
 	private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
 		@Override
