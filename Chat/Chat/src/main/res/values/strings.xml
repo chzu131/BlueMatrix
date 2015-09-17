@@ -6,4 +6,5 @@
     <string name="searching">Searching....</string>
     <string name="sending_data">sending...</string>
     <string name="deviceName">LedControl</string>
+    <string name="intelligenceControl">Intelligent control</string>
 </resources>
