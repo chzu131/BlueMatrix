@@ -12,6 +12,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
@@ -27,6 +31,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private View menuDown;
     private View menuUp;
     private View mDisconnetButton;
+    ToggleButton mToggleButton;
+
 
     private String mDeviceName;
     private String mDeviceAddress;
@@ -34,6 +40,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private DirectionService mDirectionService;
     private static BlueAction blueAction;  //提供蓝牙操作
     Memory memory;
+    private boolean mAutoModeStatus;
     //private Sound sound;
 
     @Override
@@ -56,12 +63,28 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         menuUp = findViewById(R.id.menu_up);
         menuUp.setOnClickListener(this);
 
+
+
         mDisconnetButton = findViewById(R.id.disconnet_button);
         mDisconnetButton.setOnClickListener(this);
+
+        mToggleButton = (ToggleButton)findViewById(R.id.AutoModeToggle);
+        mToggleButton.setOnClickListener(this);
 
         initBlueServiec();
 
         memory = new Memory(this);
+
+        Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
+        // startService(gattDirectionServiceIntent);
+        mAutoModeStatus = memory.getAutoModeStatus();
+        if(mAutoModeStatus) {
+            mToggleButton.setChecked(true);
+            bindService(gattDirectionServiceIntent, mDirectionServiceConnection, BIND_AUTO_CREATE);
+        }
+        else{
+            mToggleButton.setChecked(false);
+        }
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);// 屏幕熄掉后依然运行
         filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -77,9 +100,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         Intent gattServiceIntent = new Intent(this, RBLService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-        Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
-       // startService(gattDirectionServiceIntent);
-        bindService(gattDirectionServiceIntent, mDirectionServiceConnection, BIND_AUTO_CREATE);
+
+
     }
 
     @Override
@@ -97,6 +119,23 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
                 break;
             }
+            case R.id.AutoModeToggle:{
+                if(!mAutoModeStatus){
+                    mAutoModeStatus = true;
+                    memory.SaveAutoModeStatus(true);
+                    mToggleButton.setChecked(true);
+                    Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
+                    bindService(gattDirectionServiceIntent,
+                            mDirectionServiceConnection, BIND_AUTO_CREATE);
+                }else{
+                    mAutoModeStatus = false;
+                    memory.SaveAutoModeStatus(false);
+                    mToggleButton.setChecked(false);
+                    unbindService(mDirectionServiceConnection);
+                }
+                break;
+            }
+
             case R.id.menu_cneter: {
                 StopDirectionService();
 
@@ -233,8 +272,9 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     };
 
     private void StopDirectionService(){
-        Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
-        unbindService(mDirectionServiceConnection);
+        if(mAutoModeStatus) {
+            unbindService(mDirectionServiceConnection);
+        }
     }
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {

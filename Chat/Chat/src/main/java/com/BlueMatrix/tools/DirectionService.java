@@ -36,6 +36,8 @@ public class DirectionService extends Service {
 
     private static boolean mScreenOn = true;
 
+    private static boolean bBinding = false;
+
 
     public final static String ACTION_DIRCTION_LEFT = "ACTION_DIRCTION_LEFT";
     public final static String ACTION_DIRCTION_RIGHT = "ACTION_DIRCTION_RIGHT";
@@ -132,7 +134,7 @@ public class DirectionService extends Service {
         @Override
         public void onSensorChanged(int sensor, float[] values) {
             //重写onSensorChanged方法
-            if(sensor == SensorManager.SENSOR_ORIENTATION) {
+            if(sensor == SensorManager.SENSOR_ORIENTATION && (bBinding == true)) {
                 //检查姿态的变化
                 String intentAction;
                 Yaw = values[0];
@@ -164,7 +166,15 @@ public class DirectionService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        bBinding = true;
         return mBinder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        //System.out.println("Service解绑成功，onUnbind");
+        bBinding = false;
+        return super.onUnbind(intent);
     }
 
     private  void broadcastUpdate(final String action) {
