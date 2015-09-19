@@ -63,6 +63,9 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
         intentFilter.addAction(RBLService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(RBLService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(RBLService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(RBLService.ACTION_DATA_WRITE_SUCCESS);
+        intentFilter.addAction(RBLService.ACTION_DATA_WRITE_FAILURE);
+
 
         return intentFilter;
     }
@@ -92,6 +95,14 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
                 startActivity(intent2);
                 finish();
             }
+            else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action))
+            {
+                Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
+            }
+            else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action))
+            {
+                Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
+            }
 
         }
     };
@@ -111,11 +122,17 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mGattUpdateReceiver);
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.send) {
             byte[] customData = mCustomView.getCustomData();
-            Toast.makeText(this, "System processing...", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "System processing...", Toast.LENGTH_SHORT).show();
             BlueAction blueAction= new BlueAction();
             blueAction.SendCustomPattern(customData);
         } else if(id == R.id.disconnet_button){

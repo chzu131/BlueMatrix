@@ -56,14 +56,14 @@ public class RBLService extends Service {
 	public final static String ACTION_GATT_SERVICES_DISCOVERED = "ACTION_GATT_SERVICES_DISCOVERED";
 	public final static String ACTION_GATT_RSSI = "ACTION_GATT_RSSI";
 	public final static String ACTION_DATA_AVAILABLE = "ACTION_DATA_AVAILABLE";
+	public final static String ACTION_DATA_WRITE_SUCCESS = "ACTION_DATA_WRITE_SUCCESS";
+	public final static String ACTION_DATA_WRITE_FAILURE = "ACTION_DATA_WRITE_FAILURE";
 	public final static String EXTRA_DATA = "EXTRA_DATA";
 
 	public final static UUID UUID_BLE_SHIELD_CUSTOMECOMMAND = UUID
 			.fromString(RBLGattAttributes.BLE_SHIELD_CUSTOMECOMMAND);
 	public final static UUID UUID_BLE_SHIELD_TEXTCOMMAND= UUID
 			.fromString(RBLGattAttributes.BLE_SHIELD_TEXTCOMMAND);
-	//public final static UUID UUID_BLE_SHIELD_RX = UUID
-	//		.fromString(RBLGattAttributes.BLE_SHIELD_RX);
 	public final static UUID UUID_BLE_SHIELD_REGULARCOMMAND = UUID
 			.fromString(RBLGattAttributes.BLE_SHIELD_REGULARCOMMAND);
     public final static UUID UUID_BLE_SHIELD_SERVICE = UUID
@@ -114,6 +114,19 @@ public class RBLService extends Service {
 			if (status == BluetoothGatt.GATT_SUCCESS) {
 				broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
 			}
+
+		}
+
+		@Override
+		public void onCharacteristicWrite(BluetoothGatt gatt,
+										 BluetoothGattCharacteristic characteristic, int status) {
+			if (status == BluetoothGatt.GATT_SUCCESS || status == 11) {
+				broadcastUpdate(ACTION_DATA_WRITE_SUCCESS, characteristic);
+			}
+			else if (status == BluetoothGatt.GATT_FAILURE) {
+				broadcastUpdate(ACTION_DATA_WRITE_FAILURE, characteristic);
+			}
+			Log.w(TAG, "onCharacteristicWrite:" + status);
 		}
 
 		@Override

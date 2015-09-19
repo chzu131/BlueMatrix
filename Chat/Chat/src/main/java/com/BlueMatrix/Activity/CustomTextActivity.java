@@ -67,6 +67,8 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         intentFilter.addAction(RBLService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(RBLService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(RBLService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(RBLService.ACTION_DATA_WRITE_SUCCESS);
+        intentFilter.addAction(RBLService.ACTION_DATA_WRITE_FAILURE);
 
         return intentFilter;
     }
@@ -85,6 +87,12 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mGattUpdateReceiver);
+    }
+
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -96,6 +104,15 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 Intent intent2 = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
                 startActivity(intent2);
                 finish();
+            }
+            else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action))
+            {
+                Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
+
+            }
+            else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action))
+            {
+                Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -119,7 +136,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
             case R.id.preview_button :
                 if(!CheckText())
                 {
-                    Toast.makeText(this, "不能超过5个字符", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "不能超过5个字符", Toast.LENGTH_SHORT).show();
                     break;
                 }
                 //预览LED效果
@@ -149,7 +166,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 }
                 //发送数据到蓝牙设备
                 byte[] customData = mCustomPreview.getCustomData(getTextData());
-                Toast.makeText(this, R.string.sending_data, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.sending_data, Toast.LENGTH_SHORT).show();
                 BlueAction blueAction= new BlueAction();
                 blueAction.SendTextPattern(customData,getTextLengh());
                 break;

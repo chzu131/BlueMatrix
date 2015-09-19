@@ -12,9 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.BlueMatrix.ble.BlueAction;
@@ -195,6 +193,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         intentFilter.addAction(RBLService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(RBLService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(RBLService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(RBLService.ACTION_DATA_WRITE_SUCCESS);
+        intentFilter.addAction(RBLService.ACTION_DATA_WRITE_FAILURE);
 
         intentFilter.addAction(DirectionService.ACTION_DIRCTION_LEFT);
         intentFilter.addAction(DirectionService.ACTION_DIRCTION_RIGHT);
@@ -242,10 +242,15 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             {
                 getGattService(mBluetoothLeService.getSupportedGattService());
             }
-            else if (RBLService.ACTION_DATA_AVAILABLE.equals(action))
+            else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action))
             {
-                // displayData(intent.getByteArrayExtra(RBLService.EXTRA_DATA));
+                Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
             }
+            else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action))
+            {
+                Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
+            }
+
         }
     };
 
