@@ -1,6 +1,7 @@
 package com.BlueMatrix.Activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -39,6 +40,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private static BlueAction blueAction;  //提供蓝牙操作
     Memory memory;
     private boolean mAutoModeStatus;
+
+    private ProgressDialog mWaitDialog = null;
     //private Sound sound;
 
     @Override
@@ -87,6 +90,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);// 屏幕熄掉后依然运行
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mDirectionService.mReceiver, filter);
+
+        initWaitDialog();
     }
 
     private void initBlueServiec() {
@@ -146,6 +151,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                // Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
+                    //showWaitDialog();
                 }
                 break;
             case R.id.menu_right:
@@ -153,6 +159,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
+                    //showWaitDialog();
                 }
                 break;
             case R.id.menu_down: {
@@ -167,6 +174,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             case R.id.menu_up:
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_UP);
+                    //showWaitDialog();
                 }
                 break;
             default:
@@ -200,6 +208,30 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         intentFilter.addAction(DirectionService.ACTION_DIRCTION_RIGHT);
 
         return intentFilter;
+    }
+
+    private void initWaitDialog()
+    {
+        mWaitDialog = new ProgressDialog(this);
+        mWaitDialog.setMessage("Please wait while loading...");
+        mWaitDialog.setIndeterminate(true);
+        mWaitDialog.setCancelable(false);
+    }
+
+    private void showWaitDialog()
+    {
+        if(mWaitDialog != null)
+        {
+            mWaitDialog.show();
+        }
+    }
+
+    private void hideWaitDialog()
+    {
+        if(mWaitDialog != null)
+        {
+            mWaitDialog.hide();
+        }
     }
     //设置按键状态
     private void SetButtonStauts(boolean flag)
@@ -237,6 +269,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             {
                 //设置按键状态
                 SetButtonStauts(true);
+                hideWaitDialog();
             }
             else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action))
             {
@@ -245,10 +278,12 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action))
             {
                 Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
+               // hideWaitDialog();
             }
             else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action))
             {
                 Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
+               // hideWaitDialog();
             }
 
         }
@@ -296,8 +331,10 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             // initialization.
             if(!mBluetoothLeService.isConnected() && (mDeviceAddress != null) )
             {
+
                 //设置按键状态
                 SetButtonStauts(false);
+                showWaitDialog();
 
                 mBluetoothLeService.connect(mDeviceAddress);
                 memory.SaveMacAddress(mDeviceAddress);

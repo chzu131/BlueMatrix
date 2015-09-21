@@ -1,6 +1,7 @@
 package com.BlueMatrix.Activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
     private Button mBackBotton;
     private CustomView mCustomView;
     private Button mDisconnetButton;
+    ProgressDialog mWaitDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +54,34 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
 
         mCustomView = (CustomView) findViewById(R.id.custom_view);
 
+        initWaitDialog();
+
 
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+    }
+
+    private void initWaitDialog()
+    {
+        mWaitDialog = new ProgressDialog(this);
+        mWaitDialog.setMessage("Please wait while loading...");
+        mWaitDialog.setIndeterminate(true);
+        mWaitDialog.setCancelable(false);
+    }
+
+    private void showWaitDialog()
+    {
+        if(mWaitDialog != null)
+        {
+            mWaitDialog.show();
+        }
+    }
+
+    private void hideWaitDialog()
+    {
+        if(mWaitDialog != null)
+        {
+            mWaitDialog.hide();
+        }
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -97,11 +125,13 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
             }
             else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action))
             {
-                Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
+                hideWaitDialog();
             }
             else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action))
             {
-                Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
+                hideWaitDialog();
             }
 
         }
@@ -132,9 +162,12 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
         int id = v.getId();
         if (id == R.id.send) {
             byte[] customData = mCustomView.getCustomData();
-            Toast.makeText(this, "System processing...", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "System processing...", Toast.LENGTH_SHORT).show();
             BlueAction blueAction= new BlueAction();
             blueAction.SendCustomPattern(customData);
+
+            showWaitDialog();
+
         } else if(id == R.id.disconnet_button){
             BlueAction blueAction= new BlueAction();
             blueAction.DisconnectBT();

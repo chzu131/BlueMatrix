@@ -1,6 +1,7 @@
 package com.BlueMatrix.Activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,8 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
 
     private int iTextMaxLength = 5;
 
+    ProgressDialog mWaitDialog = null;
+
     Paint mPaint = new Paint();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         mPaint.setColor(0xff000000);
         mPaint.setTextSize(10);
         mPaint.setTypeface(typeface);
+
+        initWaitDialog();
 
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
@@ -93,6 +98,30 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         unregisterReceiver(mGattUpdateReceiver);
     }
 
+    private void initWaitDialog()
+    {
+        mWaitDialog = new ProgressDialog(this);
+        mWaitDialog.setMessage("Please wait while loading...");
+        mWaitDialog.setIndeterminate(true);
+        mWaitDialog.setCancelable(false);
+    }
+
+    private void showWaitDialog()
+    {
+        if(mWaitDialog != null)
+        {
+            mWaitDialog.show();
+        }
+    }
+
+    private void hideWaitDialog()
+    {
+        if(mWaitDialog != null)
+        {
+            mWaitDialog.hide();
+        }
+    }
+
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -107,12 +136,13 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
             }
             else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action))
             {
-                Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
-
+                //Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
+                hideWaitDialog();
             }
             else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action))
             {
-                Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
+                hideWaitDialog();
             }
 
         }
@@ -166,9 +196,11 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 }
                 //发送数据到蓝牙设备
                 byte[] customData = mCustomPreview.getCustomData(getTextData());
-                Toast.makeText(this, R.string.sending_data, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, R.string.sending_data, Toast.LENGTH_SHORT).show();
                 BlueAction blueAction= new BlueAction();
                 blueAction.SendTextPattern(customData,getTextLengh());
+
+                showWaitDialog();
                 break;
             case R.id.back :
                 //发送数据到蓝牙设备

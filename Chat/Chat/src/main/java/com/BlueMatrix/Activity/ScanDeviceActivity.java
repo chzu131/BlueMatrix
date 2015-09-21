@@ -142,6 +142,7 @@ public class ScanDeviceActivity extends Activity {
 
 		mDialog = new AlertDialog.Builder(mContext).create();
 		mDialog.setOnKeyListener(keyListener);
+		//mDialog.setCancelable(false);
 		mDialog.show();
 		mDialog.setContentView(layout);
 	}
