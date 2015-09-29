@@ -32,6 +32,11 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private View mDisconnetButton;
     ToggleButton mToggleButton;
 
+    private View buttonSmile;
+    private View buttonHeart;
+    private View buttonSOS;
+    private View buttonForidden;
+    private View buttonStop;
 
     private String mDeviceName;
     private String mDeviceAddress;
@@ -63,6 +68,21 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         menuUp = findViewById(R.id.menu_up);
         menuUp.setOnClickListener(this);
+
+        buttonSmile = findViewById(R.id.smile_button);
+        buttonSmile.setOnClickListener(this);
+
+        buttonHeart = findViewById(R.id.heart_button);
+        buttonHeart.setOnClickListener(this);
+
+        buttonSOS = findViewById(R.id.sos_button);
+        buttonSOS.setOnClickListener(this);
+
+        buttonForidden = findViewById(R.id.foridden_button);
+        buttonForidden.setOnClickListener(this);
+
+        buttonStop = findViewById(R.id.stop_button);
+        buttonStop.setOnClickListener(this);
 
         mDisconnetButton = findViewById(R.id.disconnet_button);
         mDisconnetButton.setOnClickListener(this);
@@ -157,7 +177,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                // Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
-                    //showWaitDialog();
+                    showWaitDialog();
                 }
                 break;
             case R.id.menu_right:
@@ -165,7 +185,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
                 if(blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
-                    //showWaitDialog();
+                    showWaitDialog();
                 }
                 break;
             case R.id.menu_down: {
@@ -177,12 +197,37 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 break;
             }
 
-            case R.id.menu_up:
+            case R.id.smile_button:
                 if(blueAction != null) {
-                    blueAction.PatternRegularCommand(BlueAction.PATTERN_UP);
-                    //showWaitDialog();
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_SMILE);
+                    showWaitDialog();
                 }
                 break;
+            case R.id.heart_button:
+                if(blueAction != null) {
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_HEART);
+                    showWaitDialog();
+                }
+                break;
+            case R.id.sos_button:
+                if(blueAction != null) {
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_SOS);
+                    showWaitDialog();
+                }
+                break;
+            case R.id.foridden_button:
+                if(blueAction != null) {
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_FORIDDEN);
+                    showWaitDialog();
+                }
+                break;
+            case R.id.stop_button:
+                if(blueAction != null) {
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_STOP);
+                    showWaitDialog();
+                }
+                break;
+
             default:
                 break;
         }
@@ -219,7 +264,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private void initWaitDialog()
     {
         mWaitDialog = new ProgressDialog(this);
-        mWaitDialog.setMessage("Connecting...");
+        mWaitDialog.setMessage("Please wait while loading...");
         mWaitDialog.setIndeterminate(true);
         mWaitDialog.setCancelable(false);
     }
@@ -278,12 +323,12 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 getGattService(mBluetoothLeService.getSupportedGattService());
             }
             else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action)){
-                Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
-               // hideWaitDialog();
+               // Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
+                hideWaitDialog();
             }
             else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action)){
                 Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
-               // hideWaitDialog();
+                hideWaitDialog();
             }
         }
     };

@@ -19,6 +19,12 @@ public class BlueAction {
     public  static int PATTERN_UP = 1;
     public  static int  PATTERN_RIGHT= 2;
 
+    public  static int  PATTERN_SMILE = 6;
+    public  static int  PATTERN_HEART	 = 7;
+    public  static int  PATTERN_SOS = 8;
+    public  static int  PATTERN_FORIDDEN = 9;
+    public  static int  PATTERN_STOP = 10;
+
     public BlueAction()
     {
 

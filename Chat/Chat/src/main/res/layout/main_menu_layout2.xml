@@ -14,7 +14,7 @@
         android:textColor="#FF018ae8"
         android:textStyle="bold"
         android:text="Disconnet"
-        android:layout_gravity="left"
+        android:layout_gravity="right"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         />
@@ -22,7 +22,7 @@
     <FrameLayout
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center"
         android:padding="6dp"
         android:paddingLeft="20dp"
         android:background="@drawable/menu_center_bg">
@@ -64,58 +64,6 @@
             />
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:paddingBottom="160dp"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/smile_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:textColor="#FF018ae8"
-            android:textStyle="bold"
-            android:text="smile"
-            />
-        <Button
-            android:id="@+id/heart_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:textColor="#FF018ae8"
-            android:textStyle="bold"
-            android:text="heart"
-            />
-        <Button
-            android:id="@+id/sos_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:textColor="#FF018ae8"
-            android:textStyle="bold"
-            android:text="SOS"
-            />
-        <Button
-            android:id="@+id/foridden_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:textColor="#FF018ae8"
-            android:textStyle="bold"
-            android:text="foridden"
-            />
-        <Button
-            android:id="@+id/stop_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:textColor="#FF018ae8"
-            android:textStyle="bold"
-            android:text="stop"
-            />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
