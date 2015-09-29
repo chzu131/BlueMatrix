@@ -49,7 +49,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu_layout);
 
-        menuCenter = findViewById(R.id.menu_cneter);
+        menuCenter = findViewById(R.id.menu_center);
         menuCenter.setOnClickListener(this);
 
         menuLeft = findViewById(R.id.menu_left);
@@ -64,20 +64,26 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         menuUp = findViewById(R.id.menu_up);
         menuUp.setOnClickListener(this);
 
-
-
         mDisconnetButton = findViewById(R.id.disconnet_button);
         mDisconnetButton.setOnClickListener(this);
 
         mToggleButton = (ToggleButton)findViewById(R.id.AutoModeToggle);
         mToggleButton.setOnClickListener(this);
 
-        initBlueServiec();
+        initBlueService();
 
         memory = new Memory(this);
 
+        //如果智能控制的界面隐藏了，屏蔽智能控制的功能
+        View layoutIntelligenceControl = findViewById(R.id.layoutIntelligenceControl);
+        if(layoutIntelligenceControl.getVisibility() == View.GONE) {
+            if(memory.getAutoModeStatus() == true) {
+                memory.SaveAutoModeStatus(false);
+            }
+        }
+
         Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
-        // startService(gattDirectionServiceIntent);
+
         mAutoModeStatus = memory.getAutoModeStatus();
         if(mAutoModeStatus) {
             mToggleButton.setChecked(true);
@@ -94,7 +100,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         initWaitDialog();
     }
 
-    private void initBlueServiec() {
+    private void initBlueService() {
         Intent intent = getIntent();
         mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_ADDRESS);
         mDeviceName = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_NAME);
@@ -139,7 +145,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 break;
             }
 
-            case R.id.menu_cneter: {
+            case R.id.menu_center: {
                 StopDirectionService();
 
                 Intent intent = new Intent();
@@ -213,7 +219,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private void initWaitDialog()
     {
         mWaitDialog = new ProgressDialog(this);
-        mWaitDialog.setMessage("Please wait while loading...");
+        mWaitDialog.setMessage("Connecting...");
         mWaitDialog.setIndeterminate(true);
         mWaitDialog.setCancelable(false);
     }
@@ -234,7 +240,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         }
     }
     //设置按键状态
-    private void SetButtonStauts(boolean flag)
+    private void SetButtonStatus(boolean flag)
     {
         menuLeft.setEnabled(flag);
         menuUp.setEnabled(flag);
@@ -257,35 +263,28 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             }
 
             //蓝牙命令
-            if (RBLService.ACTION_GATT_DISCONNECTED.equals(action))
-            {
+            if (RBLService.ACTION_GATT_DISCONNECTED.equals(action)){
                 StopDirectionService();
-
                 //连接断开，返回
                 Intent intent2 = new Intent(MainMenuActivity.this, ScanDeviceActivity.class);
                 startActivity(intent2);
             }
-            else if (RBLService.ACTION_GATT_CONNECTED.equals(action))
-            {
+            else if (RBLService.ACTION_GATT_CONNECTED.equals(action)){
                 //设置按键状态
-                SetButtonStauts(true);
+                SetButtonStatus(true);
                 hideWaitDialog();
             }
-            else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action))
-            {
+            else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)){
                 getGattService(mBluetoothLeService.getSupportedGattService());
             }
-            else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action))
-            {
+            else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action)){
                 Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
                // hideWaitDialog();
             }
-            else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action))
-            {
+            else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action)){
                 Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
                // hideWaitDialog();
             }
-
         }
     };
 
@@ -306,7 +305,6 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-
             mDirectionService = null;
         }
     };
@@ -318,7 +316,6 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     }
 
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName componentName,
                                        IBinder service) {
@@ -331,9 +328,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             // initialization.
             if(!mBluetoothLeService.isConnected() && (mDeviceAddress != null) )
             {
-
                 //设置按键状态
-                SetButtonStauts(false);
+                SetButtonStatus(false);
                 showWaitDialog();
 
                 mBluetoothLeService.connect(mDeviceAddress);

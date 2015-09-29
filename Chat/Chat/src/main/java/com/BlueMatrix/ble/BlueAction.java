@@ -65,7 +65,7 @@ public class BlueAction {
     }
 
     //传送文字图案
-    public void SendTextPattern(byte data[], int TextLengh)
+    public void SendTextPattern(byte data[])
     {
         if(data.length > 144)
         {
@@ -86,6 +86,34 @@ public class BlueAction {
             mBluetoothLeService.writeCharacteristic(characteristic);
         }
     }
+
+    //传送文字图案
+    public void SendTextPattern2(byte data[])
+    {
+        if(data.length > 26)
+        {
+            return;
+        }
+        int temp = 0;
+       // byte CustomTextPattern[] = new byte[data.length + 1 + 1 ];//加上字符长度,和验证码
+        byte CustomTextPattern[] = new byte[data.length + 1  ];//加上字符长度
+        BluetoothGattCharacteristic characteristic = map.get(RBLService.UUID_BLE_SHIELD_TEXTCOMMAND);
+        if(characteristic != null)
+        {
+            CustomTextPattern[0] = (byte)(data.length);
+
+            for (int i = 0; i < data.length; i++)
+            {
+                CustomTextPattern[i+1] = (byte)(lowercaseToCapital(data[i]));
+                temp += data[i];
+            }
+            //CustomTextPattern[1] = (byte)(temp/3 - 2);
+
+            characteristic.setValue(CustomTextPattern);
+            mBluetoothLeService.writeCharacteristic(characteristic);
+        }
+    }
+
     public void getGattService(BluetoothGattService gattService)
     {
         BluetoothGattCharacteristic characteristic;
@@ -110,6 +138,16 @@ public class BlueAction {
             characteristic.setValue(RegularPattern);
             mBluetoothLeService.writeCharacteristic(characteristic);
         }
+    }
+    //小写转大写
+
+    byte lowercaseToCapital(byte b)
+    {
+        if(b >= 'a' && b <= 'z')
+        {
+             b += 'A' - 'a';
+        }
+        return b;
     }
 
 //    public static byte[] hexStringToByteArray(String s)

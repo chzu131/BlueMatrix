@@ -18,11 +18,14 @@
 
         <Button
             android:id="@+id/disconnet_button"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_selector"
             android:layout_gravity="right"
-            android:text="Disconnet" />
+            android:text="Disconnet"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            />
 
     </FrameLayout>
 
@@ -62,11 +65,11 @@
                 android:layout_height="19dp"
                 android:textSize="18dp"
                 android:singleLine="true"
-                android:maxLength="20"
+                android:maxLength="22"
                 android:typeface="serif"
                 android:background="#ffffffff"
                 android:textColor="#ff000000"
-                android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
+                android:digits=" 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
@@ -93,11 +96,13 @@
 
         <Button
             android:id="@+id/preview_button"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="50dp"
             android:background="@drawable/button_selector"
             android:text="PREVIEW"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             />
 
         <Button

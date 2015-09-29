@@ -30,8 +30,6 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     private Button mBackButton;
     private CustomPreview mCustomPreview;
 
-    private int iTextMaxLength = 5;
-
     ProgressDialog mWaitDialog = null;
 
     Paint mPaint = new Paint();
@@ -164,11 +162,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 break;
             }
             case R.id.preview_button :
-                if(!CheckText())
-                {
-                    Toast.makeText(this, "不能超过5个字符", Toast.LENGTH_SHORT).show();
-                    break;
-                }
+
                 //预览LED效果
                 mCustomText.setCursorVisible(false);
                 mCustomText.destroyDrawingCache();
@@ -189,17 +183,13 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 }, 20);
                 break;
             case R.id.send_button :
-                if(!CheckText())
-                {
-                    Toast.makeText(this, "不能超过5个字符", Toast.LENGTH_LONG).show();
-                    break;
-                }
+
                 //发送数据到蓝牙设备
                 byte[] customData = mCustomPreview.getCustomData(getTextData());
                 //Toast.makeText(this, R.string.sending_data, Toast.LENGTH_SHORT).show();
                 BlueAction blueAction= new BlueAction();
-                blueAction.SendTextPattern(customData,getTextLengh());
-
+                //blueAction.SendTextPattern(customData);
+                blueAction.SendTextPattern2(mCustomText.getText().toString().getBytes());
                 showWaitDialog();
                 break;
             case R.id.back :
@@ -212,20 +202,6 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         }
     }
 
-    //检查文本框文字是否合法
-    public boolean CheckText()
-    {
-        if(mCustomText.length() > iTextMaxLength)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    public int getTextLengh()
-    {
-       return mCustomText.length();
-    }
 
     private boolean[][] getTextData() {
         Bitmap drawingCache = mCustomText.getDrawingCache();
