@@ -173,6 +173,12 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
                 break;
             }
+            case R.id.menu_up:
+                if(blueAction != null) {
+                    blueAction.PatternRegularCommand(BlueAction.PATTERN_UP);
+                    showWaitDialog();
+                }
+                break;
             case R.id.menu_left:
                // Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
                 if(blueAction != null) {
