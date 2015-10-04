@@ -14,4 +14,5 @@
     <dimen name="custom_view_height">300dp</dimen>
 
     <dimen name="menu_center_button_size">106dp</dimen>
+    <dimen name="loading_view_size">210dp</dimen>
 </resources>

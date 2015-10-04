@@ -14,14 +14,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
 import com.BlueMatrix.tools.Memory;
 import com.BlueMatrix.view.CustomPreview;
 
-public class CustomTextActivity extends Activity implements View.OnClickListener {
+class CustomTextActivity extends Activity implements View.OnClickListener {
 
     private EditText mCustomText;
     private Button mPreviewButton;
@@ -206,6 +205,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     private boolean[][] getTextData() {
         Bitmap drawingCache = mCustomText.getDrawingCache();
         String cacheText = mCustomText.getText().toString();
+        cacheText = cacheText.toUpperCase();
         int textWidth = (int) mPaint.measureText(cacheText);
         if (textWidth <= 0) {
             return null;

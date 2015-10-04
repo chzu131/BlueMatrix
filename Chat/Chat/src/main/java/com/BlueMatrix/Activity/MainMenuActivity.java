@@ -12,6 +12,9 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -49,10 +52,16 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private ProgressDialog mWaitDialog = null;
     //private Sound sound;
 
+    //定义手势检测器实例
+    GestureDetector detector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu_layout);
+
+        //创建手势检测器
+        detector = new GestureDetector(this, new MyOnGestureListener());
 
         menuCenter = findViewById(R.id.menu_center);
         menuCenter.setOnClickListener(this);
@@ -87,7 +96,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         mDisconnetButton = findViewById(R.id.disconnet_button);
         mDisconnetButton.setOnClickListener(this);
 
-        mToggleButton = (ToggleButton)findViewById(R.id.AutoModeToggle);
+        mToggleButton = (ToggleButton) findViewById(R.id.AutoModeToggle);
         mToggleButton.setOnClickListener(this);
 
         initBlueService();
@@ -96,8 +105,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         //如果智能控制的界面隐藏了，屏蔽智能控制的功能
         View layoutIntelligenceControl = findViewById(R.id.layoutIntelligenceControl);
-        if(layoutIntelligenceControl.getVisibility() == View.GONE) {
-            if(memory.getAutoModeStatus() == true) {
+        if (layoutIntelligenceControl.getVisibility() == View.GONE) {
+            if (memory.getAutoModeStatus() == true) {
                 memory.SaveAutoModeStatus(false);
             }
         }
@@ -105,11 +114,10 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
 
         mAutoModeStatus = memory.getAutoModeStatus();
-        if(mAutoModeStatus) {
+        if (mAutoModeStatus) {
             mToggleButton.setChecked(true);
             bindService(gattDirectionServiceIntent, mDirectionServiceConnection, BIND_AUTO_CREATE);
-        }
-        else{
+        } else {
             mToggleButton.setChecked(false);
         }
 
@@ -130,16 +138,14 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
 
-
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.disconnet_button:
-            {
-                BlueAction blueAction= new BlueAction();
+            case R.id.disconnet_button: {
+                BlueAction blueAction = new BlueAction();
                 blueAction.DisconnectBT();
                 Memory memory = new Memory(this);
                 memory.ClearLastMacAddress();
@@ -148,15 +154,15 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
                 break;
             }
-            case R.id.AutoModeToggle:{
-                if(!mAutoModeStatus){
+            case R.id.AutoModeToggle: {
+                if (!mAutoModeStatus) {
                     mAutoModeStatus = true;
                     memory.SaveAutoModeStatus(true);
                     mToggleButton.setChecked(true);
                     Intent gattDirectionServiceIntent = new Intent(this, DirectionService.class);
                     bindService(gattDirectionServiceIntent,
                             mDirectionServiceConnection, BIND_AUTO_CREATE);
-                }else{
+                } else {
                     mAutoModeStatus = false;
                     memory.SaveAutoModeStatus(false);
                     mToggleButton.setChecked(false);
@@ -174,25 +180,16 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 break;
             }
             case R.id.menu_up:
-                if(blueAction != null) {
-                    blueAction.PatternRegularCommand(BlueAction.PATTERN_UP);
-                    showWaitDialog();
-                }
+                showUp();
                 break;
             case R.id.menu_left:
-               // Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
-                if(blueAction != null) {
-                    blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
-                    showWaitDialog();
-                }
+                // Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
+                showLeft();
                 break;
             case R.id.menu_right:
                 //Toast.makeText(this, "Turn right", Toast.LENGTH_LONG).show();
 
-                if(blueAction != null) {
-                    blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
-                    showWaitDialog();
-                }
+                showRight();
                 break;
             case R.id.menu_down: {
                 StopDirectionService();
@@ -204,38 +201,56 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             }
 
             case R.id.smile_button:
-                if(blueAction != null) {
+                if (blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_SMILE);
                     showWaitDialog();
                 }
                 break;
             case R.id.heart_button:
-                if(blueAction != null) {
+                if (blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_HEART);
                     showWaitDialog();
                 }
                 break;
             case R.id.sos_button:
-                if(blueAction != null) {
+                if (blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_SOS);
                     showWaitDialog();
                 }
                 break;
             case R.id.foridden_button:
-                if(blueAction != null) {
+                if (blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_FORIDDEN);
                     showWaitDialog();
                 }
                 break;
             case R.id.stop_button:
-                if(blueAction != null) {
-                    blueAction.PatternRegularCommand(BlueAction.PATTERN_STOP);
-                    showWaitDialog();
-                }
+                showStop();
                 break;
 
             default:
                 break;
+        }
+    }
+
+    private void showStop() {
+        if (blueAction != null) {
+            blueAction.PatternRegularCommand(BlueAction.PATTERN_STOP);
+            showWaitDialog();
+        }
+    }
+
+    private void showUp() {
+        if (blueAction != null) {
+            blueAction.PatternRegularCommand(BlueAction.PATTERN_UP);
+            showWaitDialog();
+        }
+    }
+
+    private void showRight() {
+        if (blueAction != null) {
+            blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
+            showWaitDialog();
         }
     }
 
@@ -267,32 +282,27 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         return intentFilter;
     }
 
-    private void initWaitDialog()
-    {
+    private void initWaitDialog() {
         mWaitDialog = new ProgressDialog(this);
         mWaitDialog.setMessage("Please wait while loading...");
         mWaitDialog.setIndeterminate(true);
         mWaitDialog.setCancelable(false);
     }
 
-    private void showWaitDialog()
-    {
-        if(mWaitDialog != null)
-        {
+    private void showWaitDialog() {
+        if (mWaitDialog != null) {
             mWaitDialog.show();
         }
     }
 
-    private void hideWaitDialog()
-    {
-        if(mWaitDialog != null)
-        {
+    private void hideWaitDialog() {
+        if (mWaitDialog != null) {
             mWaitDialog.hide();
         }
     }
+
     //设置按键状态
-    private void SetButtonStatus(boolean flag)
-    {
+    private void SetButtonStatus(boolean flag) {
         menuLeft.setEnabled(flag);
         menuUp.setEnabled(flag);
         menuRight.setEnabled(flag);
@@ -308,31 +318,26 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             //方向命令
             if (DirectionService.ACTION_DIRCTION_LEFT.equals(action)) {
                 blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
-            }
-            else if (DirectionService.ACTION_DIRCTION_RIGHT.equals(action)) {
+            } else if (DirectionService.ACTION_DIRCTION_RIGHT.equals(action)) {
                 blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
             }
 
             //蓝牙命令
-            if (RBLService.ACTION_GATT_DISCONNECTED.equals(action)){
+            if (RBLService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 StopDirectionService();
                 //连接断开，返回
                 Intent intent2 = new Intent(MainMenuActivity.this, ScanDeviceActivity.class);
                 startActivity(intent2);
-            }
-            else if (RBLService.ACTION_GATT_CONNECTED.equals(action)){
+            } else if (RBLService.ACTION_GATT_CONNECTED.equals(action)) {
                 //设置按键状态
                 SetButtonStatus(true);
                 hideWaitDialog();
-            }
-            else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)){
+            } else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 getGattService(mBluetoothLeService.getSupportedGattService());
-            }
-            else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action)){
-               // Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
+            } else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action)) {
+                // Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
                 hideWaitDialog();
-            }
-            else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action)){
+            } else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action)) {
                 Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
                 hideWaitDialog();
             }
@@ -360,8 +365,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         }
     };
 
-    private void StopDirectionService(){
-        if(mAutoModeStatus) {
+    private void StopDirectionService() {
+        if (mAutoModeStatus) {
             unbindService(mDirectionServiceConnection);
         }
     }
@@ -377,8 +382,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             }
             // Automatically connects to the device upon successful start-up
             // initialization.
-            if(!mBluetoothLeService.isConnected() && (mDeviceAddress != null) )
-            {
+            if (!mBluetoothLeService.isConnected() && (mDeviceAddress != null)) {
                 //设置按键状态
                 SetButtonStatus(false);
                 showWaitDialog();
@@ -397,4 +401,62 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         }
     };
 
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        return detector.onTouchEvent(event);
+//    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        detector.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
+    }
+
+    class MyOnGestureListener extends SimpleOnGestureListener {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            //左滑
+//            Toast.makeText(MainMenuActivity.this, "双击", Toast.LENGTH_SHORT).show();
+            showStop();
+            return false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            float minMove = 120;
+            //最小滑动距离
+            float minVelocity = 0;
+            //最小滑动速度
+            float beginX = e1.getX();
+            float endX = e2.getX();
+            float beginY = e1.getY();
+            float endY = e2.getY();
+            if (beginX - endX > minMove && Math.abs(velocityX) > minVelocity) {
+                //左滑
+//                Toast.makeText(MainMenuActivity.this, velocityX + "左滑", Toast.LENGTH_SHORT).show();
+                showLeft();
+            } else if (endX - beginX > minMove && Math.abs(velocityX) > minVelocity) {
+                //右滑
+//                Toast.makeText(MainMenuActivity.this, velocityX + "右滑", Toast.LENGTH_SHORT).show();
+                showRight();
+            } else if (beginY - endY > minMove && Math.abs(velocityY) > minVelocity) {
+                //上滑
+//                Toast.makeText(MainMenuActivity.this, velocityX + "上滑", Toast.LENGTH_SHORT).show();
+                showUp();
+            } else if (endY - beginY > minMove && Math.abs(velocityY) > minVelocity) {
+                //下滑
+//                Toast.makeText(MainMenuActivity.this, velocityX + "下滑", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }
+    }
+
+    private void showLeft() {
+        if (blueAction != null) {
+            blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
+            showWaitDialog();
+        }
+    }
 }

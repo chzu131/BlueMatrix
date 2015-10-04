@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.zip.Inflater;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,9 +19,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -140,11 +146,19 @@ public class ScanDeviceActivity extends Activity {
 			}
 		};
 
-		mDialog = new AlertDialog.Builder(mContext).create();
+		mDialog = new AlertDialog.Builder(mContext, R.style.FullScreenDialog).create();
 		mDialog.setOnKeyListener(keyListener);
 		//mDialog.setCancelable(false);
 		mDialog.show();
 		mDialog.setContentView(layout);
+		View loadingView = mDialog.findViewById(R.id.loading_view);
+		int dimensionPixelSize = getResources().getDimensionPixelSize(R.dimen.loading_view_size);
+		RotateAnimation rotateAnimation = new RotateAnimation(360, 0, dimensionPixelSize / 2, dimensionPixelSize / 2);
+		rotateAnimation.setDuration(1000);
+		rotateAnimation.setRepeatCount(Animation.INFINITE);
+		rotateAnimation.setRepeatMode(Animation.RESTART);
+		rotateAnimation.setInterpolator(new LinearInterpolator());
+		loadingView.startAnimation(rotateAnimation);
 	}
 
 	private void scanLeDevice() {

@@ -1,40 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#FFF"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#018ae8"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/pageloading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:paddingLeft="30dp" >
+    <!--<LinearLayout-->
+        <!--android:id="@+id/pageloading"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:paddingLeft="30dp" >-->
 
-        <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp" >
+        <!--<RelativeLayout-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp" >-->
 
-            <ProgressBar
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
+            <!--<ProgressBar-->
+                <!--style="?android:attr/progressBarStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerInParent="true" />-->
+        <!--</RelativeLayout>-->
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:gravity="center"
-            android:orientation="vertical" >
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical" >-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:gravity="center"
-                android:text="@string/searching"
-                android:textSize="20sp" />
-        </LinearLayout>
-    </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="100dp"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/searching"-->
+                <!--android:textSize="20sp" />-->
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 
-</RelativeLayout>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:background="@drawable/search01"/>
+    <ImageView
+        android:id="@+id/loading_view"
+        android:layout_width="@dimen/loading_view_size"
+        android:layout_height="@dimen/loading_view_size"
+        android:layout_gravity="center"
+        android:background="@drawable/search02"/>
+
+</FrameLayout>
