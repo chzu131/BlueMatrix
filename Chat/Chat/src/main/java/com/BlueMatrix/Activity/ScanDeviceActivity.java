@@ -36,7 +36,7 @@ import com.BlueMatrix.tools.Memory;
 public class ScanDeviceActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter;
 	private static final int REQUEST_ENABLE_BT = 1;
-	private static final long SCAN_PERIOD = 3000;
+	private static final long SCAN_PERIOD = 2000;
 	private Dialog mDialog;
 	public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
 
@@ -44,7 +44,6 @@ public class ScanDeviceActivity extends Activity {
 	Timer mTimer;
 	String DeviceName;	//设备名
 
-	//private RBLService mBluetoothLeService;
 	public final static String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";
 	public final static String EXTRA_DEVICE_NAME = "EXTRA_DEVICE_NAME";
 

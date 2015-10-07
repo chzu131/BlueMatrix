@@ -18,9 +18,10 @@ import android.widget.EditText;
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
 import com.BlueMatrix.tools.Memory;
+import com.BlueMatrix.tools.MyDialog;
 import com.BlueMatrix.view.CustomPreview;
 
-class CustomTextActivity extends Activity implements View.OnClickListener {
+public class CustomTextActivity extends Activity implements View.OnClickListener {
 
     private EditText mCustomText;
     private Button mPreviewButton;
@@ -29,7 +30,7 @@ class CustomTextActivity extends Activity implements View.OnClickListener {
     private Button mBackButton;
     private CustomPreview mCustomPreview;
 
-    ProgressDialog mWaitDialog = null;
+    MyDialog mMyDialog = null;
 
     Paint mPaint = new Paint();
     @Override
@@ -57,7 +58,7 @@ class CustomTextActivity extends Activity implements View.OnClickListener {
         mPaint.setTextSize(10);
         mPaint.setTypeface(typeface);
 
-        initWaitDialog();
+        mMyDialog = new MyDialog(this, "Please wait while loading...");
 
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
@@ -95,30 +96,6 @@ class CustomTextActivity extends Activity implements View.OnClickListener {
         unregisterReceiver(mGattUpdateReceiver);
     }
 
-    private void initWaitDialog()
-    {
-        mWaitDialog = new ProgressDialog(this);
-        mWaitDialog.setMessage("Please wait while loading...");
-        mWaitDialog.setIndeterminate(true);
-        mWaitDialog.setCancelable(false);
-    }
-
-    private void showWaitDialog()
-    {
-        if(mWaitDialog != null)
-        {
-            mWaitDialog.show();
-        }
-    }
-
-    private void hideWaitDialog()
-    {
-        if(mWaitDialog != null)
-        {
-            mWaitDialog.hide();
-        }
-    }
-
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -134,12 +111,12 @@ class CustomTextActivity extends Activity implements View.OnClickListener {
             else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action))
             {
                 //Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
-                hideWaitDialog();
+                mMyDialog.hideDialog();
             }
             else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action))
             {
                 //Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
-                hideWaitDialog();
+                mMyDialog.hideDialog();
             }
 
         }
@@ -189,7 +166,7 @@ class CustomTextActivity extends Activity implements View.OnClickListener {
                 BlueAction blueAction= new BlueAction();
                 //blueAction.SendTextPattern(customData);
                 blueAction.SendTextPattern2(mCustomText.getText().toString().getBytes());
-                showWaitDialog();
+                mMyDialog.showDialog();
                 break;
             case R.id.back :
                 //发送数据到蓝牙设备

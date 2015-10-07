@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:paddingBottom="20dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/layoutIntelligenceControl"
         >
         <TextView

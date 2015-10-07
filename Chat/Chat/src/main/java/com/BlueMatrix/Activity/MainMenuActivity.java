@@ -23,6 +23,10 @@ import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
 import com.BlueMatrix.tools.DirectionService;
 import com.BlueMatrix.tools.Memory;
+import com.BlueMatrix.tools.MyDialog;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainMenuActivity extends Activity implements View.OnClickListener {
     private final static String TAG = MainMenuActivity.class.getSimpleName();
@@ -49,8 +53,11 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     Memory memory;
     private boolean mAutoModeStatus;
 
-    private ProgressDialog mWaitDialog = null;
     //private Sound sound;
+
+
+    private MyDialog mMyDialog = null;
+
 
     //定义手势检测器实例
     GestureDetector detector;
@@ -125,7 +132,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mDirectionService.mReceiver, filter);
 
-        initWaitDialog();
+        mMyDialog = new MyDialog(this, "Please wait while loading...");
     }
 
     private void initBlueService() {
@@ -187,7 +194,6 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 showLeft();
                 break;
             case R.id.menu_right:
-                //Toast.makeText(this, "Turn right", Toast.LENGTH_LONG).show();
 
                 showRight();
                 break;
@@ -203,25 +209,25 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             case R.id.smile_button:
                 if (blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_SMILE);
-                    showWaitDialog();
+                    mMyDialog.showDialog();
                 }
                 break;
             case R.id.heart_button:
                 if (blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_HEART);
-                    showWaitDialog();
+                    mMyDialog.showDialog();
                 }
                 break;
             case R.id.sos_button:
                 if (blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_SOS);
-                    showWaitDialog();
+                    mMyDialog.showDialog();
                 }
                 break;
             case R.id.foridden_button:
                 if (blueAction != null) {
                     blueAction.PatternRegularCommand(BlueAction.PATTERN_FORIDDEN);
-                    showWaitDialog();
+                    mMyDialog.showDialog();
                 }
                 break;
             case R.id.stop_button:
@@ -236,21 +242,21 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private void showStop() {
         if (blueAction != null) {
             blueAction.PatternRegularCommand(BlueAction.PATTERN_STOP);
-            showWaitDialog();
+            mMyDialog.showDialog();
         }
     }
 
     private void showUp() {
         if (blueAction != null) {
             blueAction.PatternRegularCommand(BlueAction.PATTERN_UP);
-            showWaitDialog();
+            mMyDialog.showDialog();
         }
     }
 
     private void showRight() {
         if (blueAction != null) {
             blueAction.PatternRegularCommand(BlueAction.PATTERN_RIGHT);
-            showWaitDialog();
+            mMyDialog.showDialog();
         }
     }
 
@@ -282,24 +288,6 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         return intentFilter;
     }
 
-    private void initWaitDialog() {
-        mWaitDialog = new ProgressDialog(this);
-        mWaitDialog.setMessage("Please wait while loading...");
-        mWaitDialog.setIndeterminate(true);
-        mWaitDialog.setCancelable(false);
-    }
-
-    private void showWaitDialog() {
-        if (mWaitDialog != null) {
-            mWaitDialog.show();
-        }
-    }
-
-    private void hideWaitDialog() {
-        if (mWaitDialog != null) {
-            mWaitDialog.hide();
-        }
-    }
 
     //设置按键状态
     private void SetButtonStatus(boolean flag) {
@@ -331,15 +319,16 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             } else if (RBLService.ACTION_GATT_CONNECTED.equals(action)) {
                 //设置按键状态
                 SetButtonStatus(true);
-                hideWaitDialog();
+
+                mMyDialog.hideDialog();
             } else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 getGattService(mBluetoothLeService.getSupportedGattService());
             } else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action)) {
                 // Toast.makeText(getApplicationContext(), "finish", Toast.LENGTH_SHORT).show();
-                hideWaitDialog();
+                mMyDialog.hideDialog();
             } else if (RBLService.ACTION_DATA_WRITE_FAILURE.equals(action)) {
                 Toast.makeText(getApplicationContext(), "failure", Toast.LENGTH_SHORT).show();
-                hideWaitDialog();
+                mMyDialog.hideDialog();
             }
         }
     };
@@ -385,7 +374,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             if (!mBluetoothLeService.isConnected() && (mDeviceAddress != null)) {
                 //设置按键状态
                 SetButtonStatus(false);
-                showWaitDialog();
+                mMyDialog.showDialog();
 
                 mBluetoothLeService.connect(mDeviceAddress);
                 memory.SaveMacAddress(mDeviceAddress);
@@ -456,7 +445,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private void showLeft() {
         if (blueAction != null) {
             blueAction.PatternRegularCommand(BlueAction.PATTERN_LEFT);
-            showWaitDialog();
+            mMyDialog.showDialog();
         }
     }
 }
