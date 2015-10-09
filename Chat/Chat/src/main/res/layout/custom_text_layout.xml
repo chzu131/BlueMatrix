@@ -46,10 +46,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="20dp"
+        android:padding="15dp"
         android:gravity="center">
 
         <TextView
+            android:id="@+id/TextViewContent"
             android:text="Content："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -74,6 +75,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:background="#018ae8"/>
+            <TextView
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(Supported character: 0-9 A-Z +-*/=!)"/>
 
         </LinearLayout>
 

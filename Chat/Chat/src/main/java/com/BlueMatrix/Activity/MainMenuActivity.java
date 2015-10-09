@@ -55,9 +55,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
     //private Sound sound;
 
-
     private MyDialog mMyDialog = null;
-
 
     //定义手势检测器实例
     GestureDetector detector;
@@ -65,7 +63,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_menu_layout);
+        setContentView(R.layout.main_menu_layout1);
 
         //创建手势检测器
         detector = new GestureDetector(this, new MyOnGestureListener());
@@ -318,9 +316,10 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
                 startActivity(intent2);
             } else if (RBLService.ACTION_GATT_CONNECTED.equals(action)) {
                 //设置按键状态
-                SetButtonStatus(true);
+                //SetButtonStatus(true);
 
                 mMyDialog.hideDialog();
+
             } else if (RBLService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 getGattService(mBluetoothLeService.getSupportedGattService());
             } else if (RBLService.ACTION_DATA_WRITE_SUCCESS.equals(action)) {
@@ -373,7 +372,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             // initialization.
             if (!mBluetoothLeService.isConnected() && (mDeviceAddress != null)) {
                 //设置按键状态
-                SetButtonStatus(false);
+                //SetButtonStatus(false);
                 mMyDialog.showDialog();
 
                 mBluetoothLeService.connect(mDeviceAddress);

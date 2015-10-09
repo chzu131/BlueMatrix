@@ -13,7 +13,7 @@ public class MyDialog {
     private ProgressDialog mWaitDialog = null;
     private Timer mTimer = null;
 
-    private int WAIT_DAILOG_SHOW_TIME = 10000;
+    private int WAIT_DIALOG_SHOW_TIME = 10000;
 
     private void initDialog(Context context, String text) {
         mWaitDialog = new ProgressDialog(context);
@@ -42,7 +42,7 @@ public class MyDialog {
                         mWaitDialog.dismiss();
                     }
                 }
-            }, WAIT_DAILOG_SHOW_TIME);
+            }, WAIT_DIALOG_SHOW_TIME);
         }
     }
 
@@ -50,7 +50,7 @@ public class MyDialog {
         if (mWaitDialog != null) {
             if (mWaitDialog.isShowing()) {
                 mWaitDialog.dismiss();
-                //停止检查对话框是否显示中的定时器
+                //停止检查"对话框是否已经隐藏"的定时器
                 if(mTimer != null) {
                     mTimer.cancel();
                     mTimer = null;

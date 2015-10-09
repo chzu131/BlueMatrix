@@ -28,6 +28,7 @@ public class RBLGattAttributes {
     public static String BLE_SHIELD_CUSTOMECOMMAND = "0000fff1-0000-1000-8000-00805f9b34fb";
 	public static String BLE_SHIELD_REGULARCOMMAND = "0000fff2-0000-1000-8000-00805f9b34fb";
 	public static String BLE_SHIELD_TEXTCOMMAND = "0000fff3-0000-1000-8000-00805f9b34fb";
+	public static String BLE_SHIELD_PASSWORD = "0000fff6-0000-1000-8000-00805f9b34fb";
 
 	static {
 		// RBL Services.

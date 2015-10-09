@@ -124,13 +124,30 @@ public class BlueAction {
     {
         BluetoothGattCharacteristic characteristic;
         characteristic= gattService.getCharacteristic(RBLService.UUID_BLE_SHIELD_CUSTOMECOMMAND);
-        map.put(characteristic.getUuid(), characteristic);
+        if(characteristic != null) {
+            map.put(characteristic.getUuid(), characteristic);
+        }
 
         characteristic = gattService.getCharacteristic(RBLService.UUID_BLE_SHIELD_REGULARCOMMAND);
-        map.put(characteristic.getUuid(), characteristic);
+        if(characteristic != null) {
+            map.put(characteristic.getUuid(), characteristic);
+        }
 
         characteristic = gattService.getCharacteristic(RBLService.UUID_BLE_SHIELD_TEXTCOMMAND);
-        map.put(characteristic.getUuid(), characteristic);
+        if(characteristic != null) {
+            map.put(characteristic.getUuid(), characteristic);
+        }
+
+        //连接蓝牙后，写入一个字符。供下位机判断是否同意被配对
+        BluetoothGattCharacteristic characteristicPassword = gattService.getCharacteristic(
+                RBLService.UUID_BLE_SHIELD_PASSWORD);
+
+        if(characteristicPassword != null)
+        {
+            byte mydata[]={0x2f};
+            characteristicPassword.setValue(mydata);
+            mBluetoothLeService.writeCharacteristic(characteristicPassword);
+        }
     }
 
     //传送规则图案

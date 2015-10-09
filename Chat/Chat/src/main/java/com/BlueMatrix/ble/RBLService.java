@@ -68,6 +68,8 @@ public class RBLService extends Service {
 			.fromString(RBLGattAttributes.BLE_SHIELD_REGULARCOMMAND);
     public final static UUID UUID_BLE_SHIELD_SERVICE = UUID
             .fromString(RBLGattAttributes.BLE_SHIELD_SERVICE);
+	public final static UUID UUID_BLE_SHIELD_PASSWORD = UUID.
+			fromString(RBLGattAttributes.BLE_SHIELD_PASSWORD);
 
 
 	private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
