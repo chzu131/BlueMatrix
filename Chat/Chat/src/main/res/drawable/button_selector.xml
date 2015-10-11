@@ -9,8 +9,7 @@
         android:state_enabled="true"
         android:state_pressed="false"
         />
-
-    <item android:drawable="@drawable/button_bg_disable"
+    <item android:drawable="@drawable/button_bg"
         android:state_enabled="false"
         android:state_pressed="false"/>
 </selector>

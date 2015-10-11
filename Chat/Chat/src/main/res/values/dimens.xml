@@ -7,12 +7,12 @@
     <dimen name="custom_layout_marginTop">30dp</dimen>
     <dimen name="custom_layout_marginEnd">4dp</dimen>
 
-    <dimen name="menu_button_width">126dp</dimen>
-    <dimen name="menu_button_height">55dp</dimen>
+    <dimen name="menu_button_width">80dp</dimen>
+    <dimen name="menu_button_height">80dp</dimen>
 
-    <dimen name="custom_view_width">300dp</dimen>
-    <dimen name="custom_view_height">300dp</dimen>
+    <dimen name="custom_view_width">320dp</dimen>
+    <dimen name="custom_view_height">320dp</dimen>
 
-    <dimen name="menu_center_button_size">106dp</dimen>
+    <dimen name="menu_center_button_size">95dp</dimen>
     <dimen name="loading_view_size">210dp</dimen>
 </resources>

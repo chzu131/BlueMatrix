@@ -137,7 +137,6 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
         Intent intent = getIntent();
         mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_ADDRESS);
         mDeviceName = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_NAME);
-        getActionBar().setTitle(mDeviceName);
 
         Intent gattServiceIntent = new Intent(this, RBLService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);

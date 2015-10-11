@@ -17,9 +17,13 @@ import android.widget.EditText;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
+import com.BlueMatrix.tools.DataMode;
 import com.BlueMatrix.tools.Memory;
 import com.BlueMatrix.tools.MyDialog;
 import com.BlueMatrix.view.CustomPreview;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomTextActivity extends Activity implements View.OnClickListener {
 
@@ -93,7 +97,10 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(mGattUpdateReceiver);
+        try {
+            unregisterReceiver(mGattUpdateReceiver);
+        } catch (Exception e) {
+        }
     }
 
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
@@ -180,37 +187,53 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
 
 
     private boolean[][] getTextData() {
-        Bitmap drawingCache = mCustomText.getDrawingCache();
+
         String cacheText = mCustomText.getText().toString();
-        cacheText = cacheText.toUpperCase();
-        int textWidth = (int) mPaint.measureText(cacheText);
-        if (textWidth <= 0) {
-            return null;
-        }
-        Paint.FontMetrics fm = mPaint.getFontMetrics();
-        int cacheH = 12;
-        int cacheW = (int) (textWidth);
-
-        Bitmap bitmap = Bitmap.createBitmap(cacheW, cacheH, Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(bitmap);
-        canvas.drawColor(0xffffffff);
-        canvas.drawText(cacheText, 0, 9, mPaint);
-
-        int cacheWidth = bitmap.getWidth();
-        int cacheHeight = bitmap.getHeight();
-        boolean[][] drawCaches = new boolean[cacheHeight][cacheWidth];
-        for (int j = 0; j < cacheHeight; j++) {
-            for (int i = 0; i < cacheWidth; i++) {
-                int pixel = bitmap.getPixel(i, j);
-                if (pixel == 0xffffffff) {
-                    drawCaches[j][i] = false;
-                } else {
-                    drawCaches[j][i] = true;
-                }
+        char[] chars = cacheText.toCharArray();
+        List<boolean[][]> booleanData = new ArrayList<boolean[][]>();
+        for (int i = 0; i < chars.length; i++) {
+            String key = chars[i] + "";
+            boolean[][] booleans = DataMode.getInstance().getModeMap().get(key);
+            if (booleans == null) {
+                booleans = DataMode.getInstance().getModeMap().get(" ");
             }
+            booleanData.add(booleans);
         }
-        return drawCaches;
+
+        boolean[][] booleans = DataMode.getInstance().mergerBooleans(booleanData);
+        return booleans;
+
+//        Bitmap drawingCache = mCustomText.getDrawingCache();
+//        String cacheText = mCustomText.getText().toString();
+//        cacheText = cacheText.toUpperCase();
+//        int textWidth = (int) mPaint.measureText(cacheText);
+//        if (textWidth <= 0) {
+//            return null;
+//        }
+//        Paint.FontMetrics fm = mPaint.getFontMetrics();
+//        int cacheH = 12;
+//        int cacheW = (int) (textWidth);
+//
+//        Bitmap bitmap = Bitmap.createBitmap(cacheW, cacheH, Bitmap.Config.RGB_565);
+//        Canvas canvas = new Canvas();
+//        canvas.setBitmap(bitmap);
+//        canvas.drawColor(0xffffffff);
+//        canvas.drawText(cacheText, 0, 9, mPaint);
+//
+//        int cacheWidth = bitmap.getWidth();
+//        int cacheHeight = bitmap.getHeight();
+//        boolean[][] drawCaches = new boolean[cacheHeight][cacheWidth];
+//        for (int j = 0; j < cacheHeight; j++) {
+//            for (int i = 0; i < cacheWidth; i++) {
+//                int pixel = bitmap.getPixel(i, j);
+//                if (pixel == 0xffffffff) {
+//                    drawCaches[j][i] = false;
+//                } else {
+//                    drawCaches[j][i] = true;
+//                }
+//            }
+//        }
+//        return drawCaches;
     }
 
 

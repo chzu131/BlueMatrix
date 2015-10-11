@@ -1,35 +1,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FFFFFF">
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingRight="20dp">
+        android:layout_height="80dp"
+        android:background="@drawable/detailed_page_bg">
 
         <Button
             android:id="@+id/back"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:text="BACK" />
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:background="@drawable/back_button_selector"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="15dp"
+            />
 
         <Button
             android:id="@+id/disconnet_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_margin="15dp"
             android:background="@drawable/button_selector"
-            android:layout_gravity="right"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16dp"
             android:text="Disconnet"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"/>
+            android:layout_gravity="right|center_vertical"/>
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp">
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="15dp">
 
         <com.BlueMatrix.view.CustomView
             android:id="@+id/custom_view"
@@ -44,21 +50,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <RadioButton
+        <ToggleButton
             android:id="@+id/paint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_view_paint_selector"
             android:button="@null"
+            android:textOff=""
+            android:textOn=""
             android:checked="true" />
-
-        <RadioButton
-            android:id="@+id/shua"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/custom_view_ex_selector"
-            android:button="@null"
-            android:checked="false" />
 
     </LinearLayout>
 
@@ -67,23 +67,53 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal"
-        android:layout_margin="20dp">
-        <Button
-            android:id="@+id/send"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="50dp"
-            android:background="@drawable/button_selector"
-            android:text="SET" />
+        android:layout_margin="15dp">
 
-        <Button
-            android:id="@+id/reset"
-            android:layout_width="100dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:text="RESET" />
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/green_button_selector"
+                android:text="重置"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:textColor="#FFFFFF"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#adadaf"
+                android:textSize="14dp"
+                android:layout_margin="4dp"
+                android:text="RESET"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/blue_button_selector"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:text="发送"
+                android:textColor="#FFFFFF"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#adadaf"
+                android:textSize="14dp"
+                android:layout_margin="4dp"
+                android:text="SEND"/>
+        </LinearLayout>
     </LinearLayout>
-
-
 </LinearLayout>

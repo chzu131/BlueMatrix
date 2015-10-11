@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.ble.RBLService;
@@ -21,8 +22,7 @@ import com.BlueMatrix.view.CustomView;
 
 public class NewCustomActivity extends Activity implements View.OnClickListener, RadioButton.OnCheckedChangeListener {
 
-    private RadioButton mPaintBox;
-    private RadioButton mShuaBox;
+    private ToggleButton mPaintBox;
     private Button mSendBotton;
     private Button mResetBotton;
     private Button mBackBotton;
@@ -36,11 +36,8 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_layout);
 
-        mPaintBox = (RadioButton) findViewById(R.id.paint);
+        mPaintBox = (ToggleButton) findViewById(R.id.paint);
         mPaintBox.setOnCheckedChangeListener(this);
-
-        mShuaBox = (RadioButton) findViewById(R.id.shua);
-        mShuaBox.setOnCheckedChangeListener(this);
 
         mSendBotton = (Button) findViewById(R.id.send);
         mSendBotton.setOnClickListener(this);
@@ -81,12 +78,12 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (buttonView == mPaintBox && isChecked) {
-            mCustomView.setIsDraw(true);
-            mShuaBox.setChecked(false);
-        } else if (buttonView == mShuaBox && isChecked) {
-            mCustomView.setIsDraw(false);
-            mPaintBox.setChecked(false);
+        if (buttonView == mPaintBox) {
+            if (isChecked) {
+                mCustomView.setIsDraw(true);
+            } else {
+                mCustomView.setIsDraw(false);
+            }
         }
     }
 

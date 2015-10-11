@@ -20,7 +20,7 @@
         android:allowBackup="true"
         android:icon="@drawable/redbear"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.NoTitleBar">
         <activity
             android:name="com.BlueMatrix.Activity.ScanDeviceActivity"
             android:label="@string/app_name"
@@ -33,23 +33,27 @@
         <activity
             android:name="com.BlueMatrix.Activity.DeviceActivity"
             android:theme="@android:style/Theme.Dialog"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
         </activity>
 
         <activity
             android:name="com.BlueMatrix.Activity.MainMenuActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
         </activity>
 
         <activity android:name="com.BlueMatrix.Activity.NewCustomActivity"
             android:label="custom"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             >
         </activity>
         <activity android:name="com.BlueMatrix.Activity.CustomTextActivity"
             android:label="custom"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             >
         </activity>
         <service
