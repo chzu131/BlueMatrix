@@ -36,7 +36,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
 
     MyDialog mMyDialog = null;
 
-    Paint mPaint = new Paint();
+    //Paint mPaint = new Paint();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +45,7 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         mCustomText = (EditText) findViewById(R.id.custom_text);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "font/00starmap.TTF");
 
-        mCustomText.setTypeface(typeface);
+        //mCustomText.setTypeface(typeface);
         mCustomText.setDrawingCacheEnabled(true);
         mPreviewButton = (Button) findViewById(R.id.preview_button);
         mPreviewButton.setOnClickListener(this);
@@ -58,9 +58,9 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
         mBackButton.setOnClickListener(this);
         mCustomPreview = (CustomPreview) findViewById(R.id.custom_preview);
 
-        mPaint.setColor(0xff000000);
-        mPaint.setTextSize(10);
-        mPaint.setTypeface(typeface);
+        //mPaint.setColor(0xff000000);
+        //mPaint.setTextSize(10);
+        //mPaint.setTypeface(typeface);
 
         mMyDialog = new MyDialog(this, "Please wait while loading...");
 

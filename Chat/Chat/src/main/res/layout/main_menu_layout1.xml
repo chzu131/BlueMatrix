@@ -136,6 +136,14 @@
                 android:background="@null"
                 android:src="@drawable/stop_button_selector"
                 />
+            <ImageButton
+                android:id="@+id/cry_button"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:src="@drawable/cry_button_selector"
+                />
 
             <FrameLayout
                 android:id="@+id/layoutIntelligenceControl"
@@ -145,7 +153,8 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="7dp"
-                android:paddingBottom="7dp">
+                android:paddingBottom="7dp"
+                android:visibility="gone">
                 <ToggleButton
                     android:id="@+id/AutoModeToggle"
                     android:layout_width="fill_parent"

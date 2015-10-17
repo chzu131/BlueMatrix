@@ -44,6 +44,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private View buttonSOS;
     private View buttonForidden;
     private View buttonStop;
+    private View buttonCry;
 
     private String mDeviceName;
     private String mDeviceAddress;
@@ -97,6 +98,9 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
         buttonStop = findViewById(R.id.stop_button);
         buttonStop.setOnClickListener(this);
+
+        buttonCry = findViewById(R.id.cry_button);
+        buttonCry.setOnClickListener(this);
 
         mDisconnetButton = findViewById(R.id.disconnet_button);
         mDisconnetButton.setOnClickListener(this);
@@ -186,6 +190,11 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             case R.id.menu_up:
                 showUp();
                 break;
+            case R.id.cry_button:{
+                Toast.makeText(this,"未启用",Toast.LENGTH_SHORT).show();
+                break;
+            }
+
             case R.id.menu_left:
                 // Toast.makeText(this, "Turn left", Toast.LENGTH_LONG).show();
                 showLeft();
