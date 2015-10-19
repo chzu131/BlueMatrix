@@ -1,7 +1,6 @@
 package com.BlueMatrix.Activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -25,10 +24,7 @@ import com.BlueMatrix.tools.DirectionService;
 import com.BlueMatrix.tools.Memory;
 import com.BlueMatrix.tools.MyDialog;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class MainMenuActivity extends Activity implements View.OnClickListener {
+public class MainMenuActivity extends Activity implements View.OnClickListener{
     private final static String TAG = MainMenuActivity.class.getSimpleName();
 
     private View menuCenter;
@@ -45,6 +41,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
     private View buttonForidden;
     private View buttonStop;
     private View buttonCry;
+
+
 
     private String mDeviceName;
     private String mDeviceAddress;
@@ -139,8 +137,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
     private void initBlueService() {
         Intent intent = getIntent();
-        mDeviceAddress = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_ADDRESS);
-        mDeviceName = intent.getStringExtra(DeviceActivity.EXTRA_DEVICE_NAME);
+        mDeviceAddress = intent.getStringExtra(ScanDeviceActivity.EXTRA_DEVICE_ADDRESS);
+        mDeviceName = intent.getStringExtra(ScanDeviceActivity.EXTRA_DEVICE_NAME);
 
         Intent gattServiceIntent = new Intent(this, RBLService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
@@ -148,18 +146,20 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
 
     }
 
+
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
             case R.id.disconnet_button: {
-                BlueAction blueAction = new BlueAction();
-                blueAction.DisconnectBT();
                 Memory memory = new Memory(this);
                 memory.ClearLastMacAddress();
+                BlueAction blueAction = new BlueAction();
+                blueAction.DisconnectBT();
 
-                Intent intent = new Intent(this, ScanDeviceActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, ScanDeviceActivity.class);
+                //startActivity(intent);
                 break;
             }
             case R.id.AutoModeToggle: {
@@ -319,9 +319,11 @@ public class MainMenuActivity extends Activity implements View.OnClickListener {
             //蓝牙命令
             if (RBLService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 StopDirectionService();
+
                 //连接断开，返回
                 Intent intent2 = new Intent(MainMenuActivity.this, ScanDeviceActivity.class);
                 startActivity(intent2);
+                finish();
             } else if (RBLService.ACTION_GATT_CONNECTED.equals(action)) {
                 //设置按键状态
                 //SetButtonStatus(true);

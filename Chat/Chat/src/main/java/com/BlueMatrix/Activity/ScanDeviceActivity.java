@@ -1,7 +1,9 @@
 package com.BlueMatrix.Activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.zip.Inflater;
@@ -18,6 +20,9 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,16 +32,22 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BlueMatrix.ble.BlueAction;
 import com.BlueMatrix.tools.Memory;
 
 
-public class ScanDeviceActivity extends Activity {
+public class ScanDeviceActivity extends Activity
+		implements AdapterView.OnItemClickListener,OnClickListener{
 	private BluetoothAdapter mBluetoothAdapter;
 	private static final int REQUEST_ENABLE_BT = 1;
-	private static final long SCAN_PERIOD = 2000;
+	private static final long SCAN_PERIOD = 3000;
 	private Dialog mDialog;
 	public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
 
@@ -47,13 +58,31 @@ public class ScanDeviceActivity extends Activity {
 	public final static String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";
 	public final static String EXTRA_DEVICE_NAME = "EXTRA_DEVICE_NAME";
 
+	private ArrayList<BluetoothDevice> devices;
+	private List<Map<String, String>> listItems = new ArrayList<Map<String, String>>();
+	private SimpleAdapter adapter;
+	private Map<String, String> map = null;
+	private ListView listView;
+	private String DEVICE_NAME = "name";
+	private String DEVICE_ADDRESS = "address";
+	public static final int RESULT_CODE = 31;
+
+	private TextView TextSearing;
+	private TextView TextSearingEnd;
+	private Handler messageHandler;
+
+	Button btnRefresh;
+	Button Connect_button;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.main);
+		setContentView(R.layout.main2);
 
 		DeviceName = getResources().getString(R.string.deviceName);
+		TextSearing = (TextView)findViewById(R.id.textSeaching);
+		TextSearingEnd = (TextView)findViewById(R.id.textSearchEnd);
 
 		if (!getPackageManager().hasSystemFeature(
 				PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -75,60 +104,61 @@ public class ScanDeviceActivity extends Activity {
 					BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		}
-		
-		Button btn = (Button)findViewById(R.id.btn);
-		btn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				scanLeDevice();
+		initBtDeviceListView();
+		//listView.setSelector(R.drawable.list_select);
+//		listView.setOnItemClickListener(new ListView.OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+//									long arg3) {
+//				// TODO Auto-generated method stub
+//				//adapter..setSelectedPosition(arg2);
+//				listView.setSelection(arg2);
+//				//adapter.notifyDataSetInvalidated();
+//
+//			}
+//		});
+		Connect_button = (Button)findViewById(R.id.connect_button);
+		Connect_button.setOnClickListener(this);
+		btnRefresh = (Button)findViewById(R.id.btnRefresh);
+		btnRefresh.setOnClickListener(this);
 
-				showRoundProcessDialog(ScanDeviceActivity.this, R.layout.loading_process_dialog_anim);
-
-				mTimer = new Timer();
-				mTimer.schedule(new TimerTask() {
-
-					@Override
-					public void run() {
-						Intent deviceListIntent = new Intent(getApplicationContext(),
-								DeviceActivity.class);
-						startActivity(deviceListIntent);
-						mDialog.dismiss();
-					}
-				}, SCAN_PERIOD);
-			}
-		});
-
-		//Intent gattServiceIntent = new Intent(this, RBLService.class);
-		//bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
-
-		showRoundProcessDialog(ScanDeviceActivity.this, R.layout.loading_process_dialog_anim);
-
-
-		mTimer = new Timer();
-		mTimer.schedule(new TimerTask() {
-
-			@Override
-			public void run() {
-				Intent deviceListIntent = new Intent(getApplicationContext(),
-						DeviceActivity.class);
-				startActivity(deviceListIntent);
-				mDialog.dismiss();
-			}
-		}, SCAN_PERIOD);
+		//showRoundProcessDialog(ScanDeviceActivity.this, R.layout.loading_process_dialog_anim);
 
 		scanLeDevice();
 
 		Memory memory = new Memory(this);
 		PreviewMacAdress = memory.GetLastMacAddress();
+
+		Looper looper = Looper.myLooper();
+		messageHandler = new MessageHandler(looper);
+	}
+
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch (id) {
+			case R.id.btnRefresh: {
+				mDevices.clear();
+				listItems.clear();
+				adapter.notifyDataSetChanged();
+				scanLeDevice();
+				break;
+			}
+			case R.id.connect_button: {
+				//int iItemPos = adapter.get.getSelectedItemPosition();
+				break;
+			}
+		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(mDevices != null)
+		if(mDevices != null) {
+			listItems.clear();
 			mDevices.clear();
+		}
 
 	}
 
@@ -161,6 +191,9 @@ public class ScanDeviceActivity extends Activity {
 	}
 
 	private void scanLeDevice() {
+		TextSearing.setVisibility(View.VISIBLE);
+		TextSearingEnd.setVisibility(View.GONE);
+		btnRefresh.setEnabled(false);
 		new Thread() {
 
 			@Override
@@ -172,7 +205,8 @@ public class ScanDeviceActivity extends Activity {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-
+				Message message = Message.obtain();
+				messageHandler.sendMessage(message);
 				mBluetoothAdapter.stopLeScan(mLeScanCallback);
 			}
 		}.start();
@@ -187,15 +221,29 @@ public class ScanDeviceActivity extends Activity {
 				@Override
 				public void run() {
 					if (device != null) {
-						if (mDevices.indexOf(device) == -1) {
+						if (mDevices.indexOf(device) == -1)
+						{
 							//过滤掉其它设备
 							if ( (device.getName()!=null) &&
 									(device.getName().compareTo(DeviceName) == 0)) {
 								mDevices.add(device);
+								map = new HashMap<String, String>();
+								map.put(DEVICE_NAME, device.getName());
+								map.put(DEVICE_ADDRESS, device.getAddress());
+								listItems.add(map);
+								listItems.add(map);
+								listItems.add(map);
+								listItems.add(map);
+								listItems.add(map);
+								listItems.add(map);
+								listItems.add(map);
+								listItems.add(map);
+								adapter.notifyDataSetChanged();
+
 								//如果找到上次连接过的设备，直接连接
 								if (PreviewMacAdress != null) {
 									if (PreviewMacAdress.compareTo(device.getAddress()) == 0) {
-										mTimer.cancel();
+										//mTimer.cancel();
 										Intent intent = new Intent(ScanDeviceActivity.this, MainMenuActivity.class);
 										intent.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
 										intent.putExtra(EXTRA_DEVICE_NAME, device.getName());
@@ -227,6 +275,59 @@ public class ScanDeviceActivity extends Activity {
 		super.onDestroy();
 
 		System.exit(0);
+	}
+
+	void initBtDeviceListView()
+	{
+		listView = (ListView) findViewById(R.id.listView);
+		listItems.clear();
+
+		//devices = (ArrayList<BluetoothDevice>) mDevices;
+//		for (BluetoothDevice device : devices) {
+//			map = new HashMap<String, String>();
+//			map.put(DEVICE_NAME, device.getName());
+//			map.put(DEVICE_ADDRESS, device.getAddress());
+//			listItems.add(map);
+//		}
+
+		adapter = new SimpleAdapter(getApplicationContext(), listItems,
+				R.layout.list_item, new String[] { "name", "address" },
+				new int[] { R.id.deviceName, R.id.deviceAddr});
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(this);
+
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View view,
+							int position, long id) {
+//		HashMap<String, String> hashMap = (HashMap<String, String>) listItems
+//				.get(position);
+//		String addr = hashMap.get(DEVICE_ADDRESS);
+//		String name = hashMap.get(DEVICE_NAME);
+//
+//        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+//        intent.putExtra(EXTRA_DEVICE_ADDRESS, addr);
+//        intent.putExtra(EXTRA_DEVICE_NAME, name);
+//        startActivity(intent);
+       // finish();
+		listView.setSelector(R.drawable.list_select);
+	}
+
+
+	class MessageHandler extends Handler {
+
+		public MessageHandler(Looper looper) {
+
+			super(looper);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			TextSearing.setVisibility(View.GONE);
+			TextSearingEnd.setVisibility(View.VISIBLE);
+			btnRefresh.setEnabled(true);
+		}
 	}
 
 }

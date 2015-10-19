@@ -130,7 +130,10 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(mGattUpdateReceiver);
+        try {
+            unregisterReceiver(mGattUpdateReceiver);
+        } catch (Exception e) {
+        }
     }
 
     @Override
