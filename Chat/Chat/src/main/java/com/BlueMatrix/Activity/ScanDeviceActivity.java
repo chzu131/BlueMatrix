@@ -47,7 +47,7 @@ public class ScanDeviceActivity extends Activity
 		implements AdapterView.OnItemClickListener,OnClickListener{
 	private BluetoothAdapter mBluetoothAdapter;
 	private static final int REQUEST_ENABLE_BT = 1;
-	private static final long SCAN_PERIOD = 3000;
+	private static final long SCAN_PERIOD = 2000;
 	private Dialog mDialog;
 	public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
 
@@ -66,6 +66,7 @@ public class ScanDeviceActivity extends Activity
 	private String DEVICE_NAME = "name";
 	private String DEVICE_ADDRESS = "address";
 	public static final int RESULT_CODE = 31;
+	private int mListViewIndex = -1;
 
 	private TextView TextSearing;
 	private TextView TextSearingEnd;
@@ -73,6 +74,7 @@ public class ScanDeviceActivity extends Activity
 
 	Button btnRefresh;
 	Button Connect_button;
+	boolean mFirstLauchApp = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -146,8 +148,19 @@ public class ScanDeviceActivity extends Activity
 				break;
 			}
 			case R.id.connect_button: {
-				//int iItemPos = adapter.get.getSelectedItemPosition();
-				break;
+				//mListViewIndex
+				if(mListViewIndex != -1) {
+					HashMap<String, String> hashMap = (HashMap<String, String>) listItems.get(mListViewIndex);
+					String addr = hashMap.get(DEVICE_ADDRESS);
+					String name = hashMap.get(DEVICE_NAME);
+
+					Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+					intent.putExtra(EXTRA_DEVICE_ADDRESS, addr);
+					intent.putExtra(EXTRA_DEVICE_NAME, name);
+					startActivity(intent);
+					//finish();
+					break;
+				}
 			}
 		}
 	}
@@ -155,7 +168,15 @@ public class ScanDeviceActivity extends Activity
 	@Override
 	protected void onResume() {
 		super.onResume();
+//		if(mFirstLauchApp)
+//		{
+//			mFirstLauchApp = false;
+//			Intent intent = new Intent();
+//			intent.setClass(getApplicationContext(), WelcomeActivity.class);
+//			startActivity(intent);
+//		}
 		if(mDevices != null) {
+			mListViewIndex = -1;
 			listItems.clear();
 			mDevices.clear();
 		}
@@ -191,6 +212,7 @@ public class ScanDeviceActivity extends Activity
 	}
 
 	private void scanLeDevice() {
+		mListViewIndex = -1;
 		TextSearing.setVisibility(View.VISIBLE);
 		TextSearingEnd.setVisibility(View.GONE);
 		btnRefresh.setEnabled(false);
@@ -230,13 +252,6 @@ public class ScanDeviceActivity extends Activity
 								map = new HashMap<String, String>();
 								map.put(DEVICE_NAME, device.getName());
 								map.put(DEVICE_ADDRESS, device.getAddress());
-								listItems.add(map);
-								listItems.add(map);
-								listItems.add(map);
-								listItems.add(map);
-								listItems.add(map);
-								listItems.add(map);
-								listItems.add(map);
 								listItems.add(map);
 								adapter.notifyDataSetChanged();
 
@@ -301,17 +316,9 @@ public class ScanDeviceActivity extends Activity
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 							int position, long id) {
-//		HashMap<String, String> hashMap = (HashMap<String, String>) listItems
-//				.get(position);
-//		String addr = hashMap.get(DEVICE_ADDRESS);
-//		String name = hashMap.get(DEVICE_NAME);
-//
-//        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-//        intent.putExtra(EXTRA_DEVICE_ADDRESS, addr);
-//        intent.putExtra(EXTRA_DEVICE_NAME, name);
-//        startActivity(intent);
-       // finish();
+		mListViewIndex = position;
 		listView.setSelector(R.drawable.list_select);
+
 	}
 
 
@@ -327,6 +334,7 @@ public class ScanDeviceActivity extends Activity
 			TextSearing.setVisibility(View.GONE);
 			TextSearingEnd.setVisibility(View.VISIBLE);
 			btnRefresh.setEnabled(true);
+			//adapter.notifyDataSetChanged();
 		}
 	}
 

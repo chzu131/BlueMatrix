@@ -30,18 +30,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.BlueMatrix.Activity.DeviceActivity"
-            android:theme="@android:style/Theme.Dialog"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
-        </activity>
 
         <activity
             android:name="com.BlueMatrix.Activity.MainMenuActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:launchMode="singleTask">
+
+        </activity>
+
+        <activity
+            android:name="com.BlueMatrix.Activity.WelcomeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
+
         </activity>
 
         <activity android:name="com.BlueMatrix.Activity.NewCustomActivity"
