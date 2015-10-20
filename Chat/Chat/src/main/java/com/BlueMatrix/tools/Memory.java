@@ -17,6 +17,7 @@ public class Memory {
     private static String DeviceAddressNode = "DeviceAddress";
     private static boolean autoModeNodeStatus = false;
     private static String AutoModeNode = "AutoModeNode";
+    public static boolean firstLogin = true;
 
     public Memory(Context context){
         this.context = context;

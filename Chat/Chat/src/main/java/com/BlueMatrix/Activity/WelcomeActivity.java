@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.BlueMatrix.tools.Memory;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,15 +20,14 @@ public class WelcomeActivity extends Activity {
         setContentView(R.layout.welcome);
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), ScanDeviceActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 1000);
-
+        @Override
+        public void run() {
+            Intent intent = new Intent();
+            intent.setClass(getApplicationContext(), ScanDeviceActivity.class);
+            startActivity(intent);
+            WelcomeActivity.this.finish();
+         }
+        }, 800);
     }
 
 }

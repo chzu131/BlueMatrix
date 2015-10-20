@@ -50,6 +50,7 @@ public class ScanDeviceActivity extends Activity
 	private static final long SCAN_PERIOD = 2000;
 	private Dialog mDialog;
 	public static List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
+	private Memory memory;
 
 	private String PreviewMacAdress = null;	//存储上一次连接的蓝牙MAC地址
 	Timer mTimer;
@@ -74,7 +75,7 @@ public class ScanDeviceActivity extends Activity
 
 	Button btnRefresh;
 	Button Connect_button;
-	boolean mFirstLauchApp = true;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,9 +128,9 @@ public class ScanDeviceActivity extends Activity
 
 		//showRoundProcessDialog(ScanDeviceActivity.this, R.layout.loading_process_dialog_anim);
 
-		scanLeDevice();
 
-		Memory memory = new Memory(this);
+
+		memory = new Memory(this);
 		PreviewMacAdress = memory.GetLastMacAddress();
 
 		Looper looper = Looper.myLooper();
@@ -165,20 +166,23 @@ public class ScanDeviceActivity extends Activity
 		}
 	}
 
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		if(mFirstLauchApp)
-//		{
-//			mFirstLauchApp = false;
-//			Intent intent = new Intent();
-//			intent.setClass(getApplicationContext(), WelcomeActivity.class);
-//			startActivity(intent);
-//		}
+		if(memory.firstLogin == true) {
+			memory.firstLogin = false;
+			Intent intent = new Intent();
+			intent.setClass(getApplicationContext(), WelcomeActivity.class);
+			startActivity(intent);
+			//finish();
+			return;
+		}
 		if(mDevices != null) {
 			mListViewIndex = -1;
 			listItems.clear();
 			mDevices.clear();
+			scanLeDevice();
 		}
 
 	}
@@ -263,6 +267,7 @@ public class ScanDeviceActivity extends Activity
 										intent.putExtra(EXTRA_DEVICE_ADDRESS, device.getAddress());
 										intent.putExtra(EXTRA_DEVICE_NAME, device.getName());
 										startActivity(intent);
+										//finish();
 									}
 								}
 
@@ -289,7 +294,7 @@ public class ScanDeviceActivity extends Activity
 	protected void onDestroy() {
 		super.onDestroy();
 
-		System.exit(0);
+		//System.exit(0);
 	}
 
 	void initBtDeviceListView()
@@ -318,14 +323,11 @@ public class ScanDeviceActivity extends Activity
 							int position, long id) {
 		mListViewIndex = position;
 		listView.setSelector(R.drawable.list_select);
-
 	}
 
 
 	class MessageHandler extends Handler {
-
 		public MessageHandler(Looper looper) {
-
 			super(looper);
 		}
 
