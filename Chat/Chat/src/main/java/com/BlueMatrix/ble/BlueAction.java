@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class BlueAction {
     private static Map<UUID, BluetoothGattCharacteristic> map = new HashMap<UUID, BluetoothGattCharacteristic>();
-    private static RBLService mBluetoothLeService;
+    public static RBLService mBluetoothLeService;
     public  static int PATTERN_LEFT = 0;
     public  static int PATTERN_UP = 1;
     public  static int  PATTERN_RIGHT= 2;

@@ -133,6 +133,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener{
         registerReceiver(mDirectionService.mReceiver, filter);
 
         mMyDialog = new MyDialog(this, "Please wait while loading...");
+
+        blueAction = new BlueAction();
     }
 
     private void initBlueService() {
@@ -140,8 +142,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener{
         mDeviceAddress = intent.getStringExtra(ScanDeviceActivity.EXTRA_DEVICE_ADDRESS);
         mDeviceName = intent.getStringExtra(ScanDeviceActivity.EXTRA_DEVICE_NAME);
 
-        Intent gattServiceIntent = new Intent(this, RBLService.class);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        //Intent gattServiceIntent = new Intent(this, RBLService.class);
+        //bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
 
     }
@@ -269,13 +271,25 @@ public class MainMenuActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
+        //初始化蓝牙操作类
+        BlueAction blueAction= new BlueAction();
+        if(!blueAction.IsConnectBT())
+        {
+            //连接断开，返回
+            Intent intent2 = new Intent(this, ScanDeviceActivity.class);
+            startActivity(intent2);
+            finish();
+        }
         registerReceiver(mServiceUpdateReceiver, makeGattUpdateIntentFilter());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mServiceUpdateReceiver);
+        try {
+            unregisterReceiver(mServiceUpdateReceiver);
+        } catch (Exception e) {
+        }
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {

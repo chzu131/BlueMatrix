@@ -153,8 +153,8 @@ public class NewCustomActivity extends Activity implements View.OnClickListener,
             Memory memory = new Memory(this);
             memory.ClearLastMacAddress();
 
-            Intent intent = new Intent(getApplicationContext(), ScanDeviceActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(getApplicationContext(), ScanDeviceActivity.class);
+           // startActivity(intent);
         }else if (id == R.id.reset) {
             mCustomView.resetData();
         } else if (id == R.id.back) {

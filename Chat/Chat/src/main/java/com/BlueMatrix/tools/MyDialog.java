@@ -21,6 +21,10 @@ public class MyDialog {
         mWaitDialog.setIndeterminate(true);
         mWaitDialog.setCancelable(false);
     }
+    public void setmWaitTime(int waitTime)
+    {
+        WAIT_DIALOG_SHOW_TIME = waitTime;
+    }
 
     public MyDialog(Context context, String text){
         initDialog(context, text);

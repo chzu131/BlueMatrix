@@ -17,13 +17,12 @@ public class Memory {
     private static String DeviceAddressNode = "DeviceAddress";
     private static boolean autoModeNodeStatus = false;
     private static String AutoModeNode = "AutoModeNode";
-    public static boolean firstLogin = true;
+    public static boolean firstLogin = true;    //保存是否第一次启动
 
     public Memory(Context context){
         this.context = context;
         editor = context.getSharedPreferences(mXMLName, context.MODE_WORLD_WRITEABLE).edit();
         read = context.getSharedPreferences(mXMLName, context.MODE_WORLD_READABLE);
-
     }
 
     public void SaveMacAddress(String DeviceAddress)
@@ -63,7 +62,6 @@ public class Memory {
 
     public void SaveAutoModeStatus(boolean bAutoModeStatus)
     {
-
         if(editor != null) {
             //editor.clear();
             //步骤2-2：将获取过来的值放入文件

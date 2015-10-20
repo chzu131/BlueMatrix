@@ -140,8 +140,8 @@ public class CustomTextActivity extends Activity implements View.OnClickListener
                 Memory memory = new Memory(this);
                 memory.ClearLastMacAddress();
 
-                Intent intent = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
-                startActivity(intent);
+               // Intent intent = new Intent(CustomTextActivity.this, ScanDeviceActivity.class);
+                //startActivity(intent);
                 break;
             }
             case R.id.preview_button :
