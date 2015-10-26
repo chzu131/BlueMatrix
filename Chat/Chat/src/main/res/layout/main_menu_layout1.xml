@@ -56,12 +56,47 @@
 
 
     </FrameLayout>
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:id="@+id/layoutIntelligenceControl"
+        >
 
-    <View
-        android:layout_width="110dp"
-        android:layout_height="45dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/logo"/>
+        <ToggleButton
+            android:id="@+id/AutoModeToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff=""
+            android:textOn=""
+            android:background="@drawable/toggle_selector"
+            android:checked="false"
+            />
+        <TextView
+            android:text="Intelligence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="10dp"
+            android:layout_marginLeft="5dp"
+            />
+        <TextView
+            android:text="Control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="10dp"
+            android:layout_marginLeft="12dp"
+            />
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/disconnet_button"
@@ -144,28 +179,6 @@
                 android:background="@null"
                 android:src="@drawable/cry_button_selector"
                 />
-
-            <FrameLayout
-                android:id="@+id/layoutIntelligenceControl"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:visibility="gone">
-                <ToggleButton
-                    android:id="@+id/AutoModeToggle"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:textOff=""
-                    android:textOn=""
-                    android:background="@drawable/toggle_selector"
-                    android:checked="true"
-                    />
-            </FrameLayout>
-
         </LinearLayout>
     </LinearLayout>
 

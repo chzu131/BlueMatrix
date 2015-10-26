@@ -18,7 +18,6 @@
         android:layout_gravity="center_horizontal|bottom"
         android:text="安 骑 软 件"
         android:textSize="20dp"
-
         android:textColor="#ffffff"/>
 
 

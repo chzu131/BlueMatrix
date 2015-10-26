@@ -187,6 +187,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener{
                 Intent intent = new Intent();
                 intent.setClass(MainMenuActivity.this, CustomTextActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             }
             case R.id.menu_up:
@@ -211,6 +212,7 @@ public class MainMenuActivity extends Activity implements View.OnClickListener{
                 Intent intent = new Intent();
                 intent.setClass(MainMenuActivity.this, NewCustomActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             }
 
@@ -290,6 +292,8 @@ public class MainMenuActivity extends Activity implements View.OnClickListener{
             unregisterReceiver(mServiceUpdateReceiver);
         } catch (Exception e) {
         }
+
+
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -379,7 +383,10 @@ public class MainMenuActivity extends Activity implements View.OnClickListener{
 
     private void StopDirectionService() {
         if (mAutoModeStatus) {
-            unbindService(mDirectionServiceConnection);
+            try {
+                unbindService(mDirectionServiceConnection);
+            } catch (Exception e) {
+            }
         }
     }
 
